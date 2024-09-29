@@ -37,6 +37,8 @@ coverage
 bower_components
 
 # Dependency directories
+/node_modules
+/jspm_packages
 node_modules/
 jspm_packages/
 
