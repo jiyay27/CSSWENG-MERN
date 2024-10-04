@@ -1,0 +1,47 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #ffffff;
+    color: #17275E;
+    margin: 0;
+    padding: 0;
+  }
+  
+  h1, h2, h3, p {
+    margin: 0.5em 0;
+  }
+  
+  button {
+    background-color: #F57909;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #FC450C;
+  }
+  
+  button:focus {
+    outline: none;
+    box-shadow: 0 0 5px #FC450C;
+  }
+  
+  input[type="text"], input[type="password"], select, input[type="search"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #A01365;
+    border-radius: 8px;
+    box-sizing: border-box;
+  }
+  
+  input:focus {
+    border-color: #831762;
+    outline: none;
+    box-shadow: 0 0 5px #831762;
+  }
+  
