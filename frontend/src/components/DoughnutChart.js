@@ -13,11 +13,22 @@ ChartJS.register(
 );
 
 export const DoughnutChart = () => {
-    const options = {}
+    const options = {
+        responsive:true,
+        plugins:{
+            legend:{
+                position:"bottom",
+            },
+            title: {
+                display:true,
+                text:"Current Stock"
+            }
+        }
+    }
     const data = {
         labels: ["Router","Ethernet Cable","Switch","Mesh"],
         datasets:[
-            {label:"Available",
+            {label:"Current Stock",
              data: [30,50,0,20],
              backgroundColor:[
                 // add colors
