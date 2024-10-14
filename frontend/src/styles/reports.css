@@ -1,0 +1,80 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+.main-content {
+    margin-left: 250px;
+    padding: 20px;
+    transition: margin-left 0.3s;
+}
+
+.main-content header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.main-content .header-content {
+    display: flex;
+    align-items: center;
+}
+
+.main-content .header-content input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-right: 20px;
+}
+
+.main-content .header-content .user-profile {
+    display: flex;
+    align-items: center;
+}
+
+.main-content .header-content .user-profile .emoji {
+    margin-right: 5px;
+}
+
+/* Reports Section */
+.reports {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.reports h2 {
+    margin-top: 0;
+    color: #2c3e50;
+}
+
+.reports table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.reports table thead {
+    background-color: #ecf0f1;
+}
+
+.reports table th,
+.reports table td {
+    padding: 15px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.reports table th {
+    font-weight: bold;
+}
+
+.reports table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}

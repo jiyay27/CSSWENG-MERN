@@ -2,44 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/dashboard.css';
 import '../styles/sidebar.css';
+import Sidebar from './Sidebar';
 
 const Dashboard = () => {
-    const handleMenuToggle = (event) => {
-        const parentLi = event.currentTarget.parentElement;
-        parentLi.classList.toggle('active');
-    };
-
-    const handleHamburgerToggle = () => {
-        document.querySelector('.sidebar').classList.toggle('collapsed');
-    };
 
     return (
         <div className="container">
-            <nav className="sidebar collapsed">
-                <div className="brand">
-                    <img src="logo.jpg" alt="Brand Logo" className="logo" />
-                    <div className="hamburger" id="hamburger" onClick={handleHamburgerToggle}>
-                        &#9776;
-                    </div>
-                </div>
-                <ul className="menu">
-                    <li>
-                        <a href="#" className="active"><span className="icon">🏠</span><span className="text">Dashboard</span></a>
-                    </li>
-                    <li>
-                        <a href="#" className="dropdown-toggle" onClick={handleMenuToggle}>
-                            <span className="icon">📦</span><span className="text">Inventory</span><span className="arrow">▼</span>
-                        </a>
-                        <ul className="submenu">
-                            <li><a href="#">Add Item</a></li>
-                            <Link to="/inventory">View Items</Link>
-                            <li><a href="#">Categories</a></li>
-                        </ul>
-                    </li>
-                    {/* Additional menu items */}
-                </ul>
-            </nav>
-            
+            <Sidebar />
             <div className="main-content">
                 <header>
                     <div className="header-content">
