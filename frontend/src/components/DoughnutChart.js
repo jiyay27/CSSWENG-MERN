@@ -53,4 +53,4 @@ ChartJS.register(
     return <div style={{ width: '400px', height: '300px' }}><Doughnut options={options} data={data} /></div>;
 };
 
-export default DoughnutChart
+export default DoughnutChart;
