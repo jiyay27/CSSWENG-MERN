@@ -15,10 +15,10 @@ function App() {
                 <Route path="/" element={<Login />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/inventory" element={<Inventory />} />
-                <Route path= "/orders/view" element={<ViewOrders/>} />
-                <Route path= "/orders/pending" element={<PendingOrders/>} />
-                <Route path= "/reports/sales" element={<SalesReports/>} />
-                <Route path= "/reports/inventory" element={<InventoryReports/>} />
+                <Route path= "/orders/view" element={<ViewOrders />} />
+                <Route path= "/orders/pending" element={<PendingOrders />} />
+                <Route path= "/reports/sales" element={<SalesReports />} />
+                <Route path= "/reports/inventory" element={<InventoryReports />} />
             </Routes>
         </Router>
     );

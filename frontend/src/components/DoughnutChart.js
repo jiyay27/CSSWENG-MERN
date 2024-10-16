@@ -16,16 +16,19 @@ ChartJS.register(
     Legend
 );
 
-export const DoughnutChart = () => {
+ const DoughnutChart = () => {
     const options = {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
             legend: {
-                position: "bottom",
+                position: "right",
+                labels:{color: "#FFFFFF"},
+                borderWidth:1
             },
             title: {
                 display: true,
-                text: "Current Stock"
+                text: " "
             }
         }
     };
@@ -41,10 +44,13 @@ export const DoughnutChart = () => {
                     "#36A2EB",  //Ethernet Cable
                     "#FFCE56",  //Switch
                     "#4BC0C0"   //Mesh
-                ]
+                ],
+                borderWidth: 4,
             }
         ]
     };
 
-    return <Doughnut options={options} data={data} />;
+    return <div style={{ width: '400px', height: '300px' }}><Doughnut options={options} data={data} /></div>;
 };
+
+export default DoughnutChart

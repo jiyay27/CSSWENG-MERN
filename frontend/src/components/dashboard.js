@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import '../styles/dashboard.css';
 import '../styles/sidebar.css';
 import Sidebar from './Sidebar';
-
+import DoughnutChart from './DoughnutChart';
 const Dashboard = () => {
 
     return (
@@ -41,8 +41,8 @@ const Dashboard = () => {
                         <button>See More</button>
                     </div>
                     <div className="card trends">
-                        <h3><span className="icon">📊</span>Graphical Trends</h3>
-                        <p>Graph will go here.</p>
+                        <h3><span className="icon">📊</span>Inventory Stock</h3>
+                        <DoughnutChart />
                     </div>
                 </div>
             </div>
