@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/dashboard.css';
 import '../styles/sidebar.css';
 import Sidebar from './Sidebar';
 import DoughnutChart from './DoughnutChart';
-const Dashboard = () => {
 
+const Dashboard = () => {
+    const [openProfile, setOpenProfile] = useState(false);
     return (
         <div className="container">
             <Sidebar />
@@ -14,7 +15,14 @@ const Dashboard = () => {
                     <div className="header-content">
                         <input type="text" placeholder="Search..." />
                         <div className="user-profile">
-                            <span className="emoji">😊</span><span>Username</span>
+                            <span className="emoji" onClick={()=> setOpenProfile((prev)=> !prev)}>😊</span><span>Username</span>
+                            {
+                                openProfile && 
+                                <ul class="user-menu">
+                                    <li><a href=''>Profile</a></li>
+                                    <li><a href='/'>Log Out</a></li>
+                                </ul>
+                            }
                         </div>
                     </div>
                 </header>

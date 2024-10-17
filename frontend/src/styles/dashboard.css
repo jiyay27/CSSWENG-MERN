@@ -112,6 +112,7 @@ header {
 .header-content {
     display: flex;
     align-items: center;
+    width: 100%;
 }
 
 .header-content input[type="text"] {
@@ -124,8 +125,8 @@ header {
 .user-profile {
     display: flex;
     align-items: center;
+    margin-left: auto
 }
-
 .user-profile .emoji {
     font-size: 40px;
     margin-right: 10px;
@@ -144,6 +145,7 @@ header {
 .card {
     background-color: #FF6F61;
     color: #FFFFFF;
+    font-weight: bold;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
@@ -166,11 +168,35 @@ header {
     padding: 10px;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .card button:hover {
     background-color: #FFA000;
+    transform: scale(1.05);
+}
+ul.user-menu {
+    list-style: none;
+    padding: 10px 15px;
+    position: absolute;
+    right: 5px;
+    top: 4.2rem;
+}
+ul.user-menu li {
+    width: 150px;
+    background-color: #FF6F61;
+}
+.user-menu a{
+    color: #FFFFFF; 
+    text-decoration: none; 
+    display: block; 
+    padding: 10px 15px; 
+    text-align: center;
+}
+
+.user-menu li:hover{
+    background-color: #FF4C40; 
+    cursor: pointer;
 }
 
 .sidebar.collapsed {
