@@ -1,12 +1,30 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import '../styles/orders.css';
 import Sidebar from './Sidebar';
 
 const ViewOrders = () => {
-    const orders = [
-        { id: 1, itemName: 'Router A', status: 'Completed', price: '$100', date: '2024-10-01' },
-        { id: 2, itemName: 'Access Point B', status: 'Completed', price: '$150', date: '2024-10-02' }
-    ];
+    const [orders, setOrders] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchOrders = async () => {
+            try {
+                const response = await fetch('http://localhost:5000/api/orders');
+                const data = await response.json();
+                setOrders(data);
+                setLoading(false);
+            } catch (error) {
+                console.error('Error fetching orders:', error);
+                setLoading(false);
+            }
+        };
+
+        fetchOrders();
+    }, []);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div className="container">
@@ -35,12 +53,12 @@ const ViewOrders = () => {
                         </thead>
                         <tbody>
                             {orders.map(order => (
-                                <tr key={order.id}>
-                                    <td>{order.id}</td>
+                                <tr key={order._id}>
+                                    <td>{order._id}</td>
                                     <td>{order.itemName}</td>
                                     <td>{order.status}</td>
-                                    <td>{order.price}</td>
-                                    <td>{order.date}</td>
+                                    <td>${order.price}</td>
+                                    <td>{new Date(order.date).toLocaleDateString()}</td>
                                 </tr>
                             ))}
                         </tbody>
