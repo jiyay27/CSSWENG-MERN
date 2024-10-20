@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import '../styles/inventory.css';
-import '../styles/modal.css';
 
 const Inventory = () => {
-    const [isModalOpen, setModalOpen] = useState(false);
+    const [items, setItems] = useState([]);  // State to store items
     const [newItem, setNewItem] = useState({
         itemName: '',
         category: 'Router',
@@ -12,8 +11,29 @@ const Inventory = () => {
         price: '',
         description: ''
     });
+    const [editItem, setEditItem] = useState(null); // State for the item being edited
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filters, setFilters] = useState({
+        category: '',
+        status: '',
+        priceMin: '',
+        priceMax: ''
+    });
 
-    const toggleModal = () => setModalOpen(!isModalOpen);
+    // Fetch items from the backend
+    useEffect(() => {
+        const fetchItems = async () => {
+            try {
+                const response = await fetch('http://localhost:5000/api/items');
+                const data = await response.json();
+                setItems(data);
+            } catch (error) {
+                console.error('Error fetching items:', error);
+            }
+        };
+
+        fetchItems();
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -23,18 +43,106 @@ const Inventory = () => {
         }));
     };
 
-    const handleSubmit = (e) => {
+    // Add new item
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // backend
-        console.log("New Item Added: ", newItem);
-        setNewItem({
-            itemName: '',
-            category: 'Router',
-            status: 'In Stock',
-            price: '',
-            description: ''
+
+        try {
+            const response = await fetch('http://localhost:5000/api/items/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newItem),
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                setItems([...items, data.newItem]);  // Add new item to the state
+                setNewItem({
+                    itemName: '',
+                    category: 'Router',
+                    status: 'In Stock',
+                    price: '',
+                    description: ''
+                });
+            } else {
+                console.error('Error adding item:', data.message);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    // Delete item
+    const handleDelete = async (id) => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/items/delete/${id}`, {
+                method: 'DELETE',
+            });
+
+            if (response.ok) {
+                setItems(items.filter(item => item._id !== id));  // Remove deleted item from state
+            } else {
+                console.error('Error deleting item');
+            }
+        } catch (error) {
+            console.error('Error deleting item:', error);
+        }
+    };
+
+    // Edit item (open modal with pre-filled values)
+    const handleEdit = (item) => {
+        setEditItem(item);
+    };
+
+    // Save edited item
+    const handleEditSubmit = async (e) => {
+        e.preventDefault();
+        console.log("Submitting edit for item:", editItem);  // Debugging line
+        try {
+            const response = await fetch(`http://localhost:5000/api/items/update/${editItem._id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(editItem),
+            });
+    
+            if (response.ok) {
+                const updatedItem = await response.json();
+                console.log("Item updated successfully:", updatedItem); // Debugging line
+    
+                // Update the state with the newly edited item
+                setItems(items.map(item => item._id === updatedItem.updatedItem._id ? updatedItem.updatedItem : item));
+                setEditItem(null);  // Close edit modal
+            } else {
+                console.error('Error updating item:', await response.json());
+            }
+        } catch (error) {
+            console.error('Error updating item:', error);
+        }
+    };
+    
+    
+
+    // Filter items based on selected filters
+    const filteredItems = items.filter(item => {
+        return (
+            (filters.category === '' || item.category === filters.category) &&
+            (filters.status === '' || item.status === filters.status) &&
+            (filters.priceMin === '' || item.price >= Number(filters.priceMin)) &&
+            (filters.priceMax === '' || item.price <= Number(filters.priceMax)) &&
+            (searchTerm === '' || item.itemName.toLowerCase().includes(searchTerm.toLowerCase()))
+        );
+    });
+
+    const handleFilterChange = (e) => {
+        const { name, value } = e.target;
+        setFilters({
+            ...filters,
+            [name]: value
         });
-        toggleModal();
     };
 
     return (
@@ -44,7 +152,12 @@ const Inventory = () => {
             <div className="main-content">
                 <header>
                     <div className="header-content">
-                        <input type="text" placeholder="Search inventory..." />
+                        <input
+                            type="text"
+                            placeholder="Search inventory..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
                         <div className="user-profile">
                             <span className="emoji">😊</span>
                             <span>Username</span>
@@ -54,7 +167,7 @@ const Inventory = () => {
 
                 <div className="inventory-header">
                     <div className="filters">
-                        <select id="categoryFilter">
+                        <select name="category" value={filters.category} onChange={handleFilterChange}>
                             <option value="">Filter by Category</option>
                             <option value="Router">Router</option>
                             <option value="Access Point">Access Point</option>
@@ -62,21 +175,92 @@ const Inventory = () => {
                             <option value="Patch Panel">Patch Panel</option>
                         </select>
 
-                        <select id="statusFilter">
+                        <select name="status" value={filters.status} onChange={handleFilterChange}>
                             <option value="">Filter by Status</option>
                             <option value="In Stock">In Stock</option>
                             <option value="Low Stock">Low Stock</option>
                             <option value="Out of Stock">Out of Stock</option>
                         </select>
 
-                        <input type="number" id="priceMin" placeholder="Min Price" />
-                        <input type="number" id="priceMax" placeholder="Max Price" />
-                        <button id="filterBtn">Apply Filters</button>
+                        <input
+                            type="number"
+                            name="priceMin"
+                            placeholder="Min Price"
+                            value={filters.priceMin}
+                            onChange={handleFilterChange}
+                        />
+                        <input
+                            type="number"
+                            name="priceMax"
+                            placeholder="Max Price"
+                            value={filters.priceMax}
+                            onChange={handleFilterChange}
+                        />
                     </div>
-                    <div className="actions">
-                        <button onClick={toggleModal}>Add New Item</button>
-                        <button id="selectBtn">Select</button>
-                    </div>
+                </div>
+
+                {/* Form to Add New Item */}
+                <div className="add-item-form">
+                    <h2>Add New Item</h2>
+                    <form id="addItemForm" onSubmit={handleSubmit}>
+                        <label htmlFor="itemName">Item Name:</label>
+                        <input
+                            type="text"
+                            id="itemName"
+                            name="itemName"
+                            value={newItem.itemName}
+                            onChange={handleChange}
+                            required
+                        />
+
+                        <label htmlFor="category">Category:</label>
+                        <select
+                            id="category"
+                            name="category"
+                            value={newItem.category}
+                            onChange={handleChange}
+                            required
+                        >
+                            <option value="Router">Router</option>
+                            <option value="Access Point">Access Point</option>
+                            <option value="Switch">Switch</option>
+                            <option value="Patch Panel">Patch Panel</option>
+                        </select>
+
+                        <label htmlFor="status">Status:</label>
+                        <select
+                            id="status"
+                            name="status"
+                            value={newItem.status}
+                            onChange={handleChange}
+                            required
+                        >
+                            <option value="In Stock">In Stock</option>
+                            <option value="Low Stock">Low Stock</option>
+                            <option value="Out of Stock">Out of Stock</option>
+                        </select>
+
+                        <label htmlFor="price">Price:</label>
+                        <input
+                            type="number"
+                            id="price"
+                            name="price"
+                            value={newItem.price}
+                            onChange={handleChange}
+                            required
+                        />
+
+                        <label htmlFor="description">Description:</label>
+                        <textarea
+                            id="description"
+                            name="description"
+                            rows="4"
+                            value={newItem.description}
+                            onChange={handleChange}
+                        ></textarea>
+
+                        <button type="submit">Add Item</button>
+                    </form>
                 </div>
 
                 <div className="inventory-table">
@@ -91,43 +275,41 @@ const Inventory = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Router A</td>
-                                <td>Router</td>
-                                <td>In Stock</td>
-                                <td>$100</td>
-                                <td>
-                                    <button className="edit-btn">Edit</button>
-                                    <button className="delete-btn">Delete</button>
-                                </td>
-                            </tr>
+                            {filteredItems.map(item => (
+                                <tr key={item._id}>
+                                    <td>{item.itemName}</td>
+                                    <td>{item.category}</td>
+                                    <td>{item.status}</td>
+                                    <td>${item.price}</td>
+                                    <td>
+                                        <button className="edit-btn" onClick={() => handleEdit(item)}>Edit</button>
+                                        <button className="delete-btn" onClick={() => handleDelete(item._id)}>Delete</button>
+                                    </td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
                 </div>
-            </div>
 
-            {isModalOpen && (
-                <div className="modal" id="addItemModal">
-                    <div className="modal-content">
-                        <span className="close" onClick={toggleModal}>&times;</span>
-                        <h2>Add New Item</h2>
-                        <form id="addItemForm" onSubmit={handleSubmit}>
+                {/* Edit Modal */}
+                {editItem && (
+                    <div className="edit-modal">
+                        <h2>Edit Item</h2>
+                        <form onSubmit={handleEditSubmit}>
                             <label htmlFor="itemName">Item Name:</label>
                             <input
                                 type="text"
-                                id="itemName"
                                 name="itemName"
-                                value={newItem.itemName}
-                                onChange={handleChange}
+                                value={editItem.itemName}
+                                onChange={(e) => setEditItem({ ...editItem, itemName: e.target.value })}
                                 required
                             />
 
                             <label htmlFor="category">Category:</label>
                             <select
-                                id="category"
                                 name="category"
-                                value={newItem.category}
-                                onChange={handleChange}
+                                value={editItem.category}
+                                onChange={(e) => setEditItem({ ...editItem, category: e.target.value })}
                                 required
                             >
                                 <option value="Router">Router</option>
@@ -138,10 +320,9 @@ const Inventory = () => {
 
                             <label htmlFor="status">Status:</label>
                             <select
-                                id="status"
                                 name="status"
-                                value={newItem.status}
-                                onChange={handleChange}
+                                value={editItem.status}
+                                onChange={(e) => setEditItem({ ...editItem, status: e.target.value })}
                                 required
                             >
                                 <option value="In Stock">In Stock</option>
@@ -152,27 +333,27 @@ const Inventory = () => {
                             <label htmlFor="price">Price:</label>
                             <input
                                 type="number"
-                                id="price"
                                 name="price"
-                                value={newItem.price}
-                                onChange={handleChange}
+                                value={editItem.price}
+                                onChange={(e) => setEditItem({ ...editItem, price: e.target.value })}
                                 required
                             />
 
                             <label htmlFor="description">Description:</label>
                             <textarea
-                                id="description"
                                 name="description"
                                 rows="4"
-                                value={newItem.description}
-                                onChange={handleChange}
+                                value={editItem.description}
+                                onChange={(e) => setEditItem({ ...editItem, description: e.target.value })}
                             ></textarea>
 
-                            <button type="submit">Add Item</button>
+                            <button type="submit">Save Changes</button>
+                            <button type="button" onClick={() => setEditItem(null)}>Cancel</button>
+
                         </form>
                     </div>
-                </div>
-            )}
+                )}
+            </div>
         </div>
     );
 };
