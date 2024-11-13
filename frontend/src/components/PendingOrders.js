@@ -1,50 +1,63 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import '../styles/orders.css';
 import Sidebar from './Sidebar';
+import OrderTable from './OrderTable';
+import OrderForm from './OrderForm';
 
 const PendingOrders = () => {
-    const pendingOrders = [
-        { id: 3, itemName: 'Switch C', status: 'Pending', price: '$200', date: '2024-10-03' },
-        { id: 4, itemName: 'Patch Panel D', status: 'Pending', price: '$250', date: '2024-10-04' }
-    ];
+    const [pendingOrders, setPendingOrders] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchPendingOrders = async () => {
+            try {
+                const response = await fetch('http://localhost:5000/api/orders?status=pending');
+                const data = await response.json();
+                setPendingOrders(data);
+                setLoading(false);
+            } catch (error) {
+                console.error('Error fetching pending orders:', error);
+                setLoading(false);
+            }
+        };
+
+        fetchPendingOrders();
+    }, []);
+
+    const handleOrderSubmit = async (newOrder) => {
+        try {
+            const response = await fetch('http://localhost:5000/api/orders', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(newOrder),
+            });
+            const data = await response.json();
+            setPendingOrders([...pendingOrders, data]);
+        } catch (error) {
+            console.error('Error creating pending order:', error);
+      }
+    };
 
     return (
         <div className="container">
             <Sidebar />
             <div className="main-content">
                 <header>
-                    <div className="header-content">
-                        <input type="text" placeholder="Search orders..." />
-                        <div className="user-profile">
-                            <span className="emoji">😊</span>
-                            <span>Username</span>
-                        </div>
-                    </div>
+                    {/* Header content */}
                 </header>
                 <div className="orders">
                     <h2>Pending Orders</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Order ID</th>
-                                <th>Item Name</th>
-                                <th>Status</th>
-                                <th>Price</th>
-                                <th>Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {pendingOrders.map(order => (
-                                <tr key={order.id}>
-                                    <td>{order.id}</td>
-                                    <td>{order.itemName}</td>
-                                    <td>{order.status}</td>
-                                    <td>{order.price}</td>
-                                    <td>{order.date}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                    {loading ? (
+                        <div>Loading...</div>
+                    ) : (
+                        <>
+                          <OrderForm onSubmit={handleOrderSubmit} />
+                          <OrderTable orders={pendingOrders} />
+                          {/* Status update buttons */}
+                        </>
+                    )}
                 </div>
             </div>
         </div>

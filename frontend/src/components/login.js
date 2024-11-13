@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import '../styles/login.css'; // Import the CSS file
+import '../styles/login.css';
+import '../styles/forgot-password.css'
 
 const Login = () => {
     const [error, setError] = useState(false);
@@ -40,6 +41,43 @@ const Login = () => {
         }
     };
 
+    const handleForgotPassword = async () => {
+        setLoading(true);
+        setError(false);
+
+        const email = prompt('Enter your email address:');
+        
+        if (!email) {
+            setLoading(false);
+            setError(true);
+            return;
+        }
+
+        try {
+            // Make a POST request to the backend for password reset
+            const response = await fetch('http://localhost:5000/api/forgot-password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email }),
+            });
+
+            if (response.ok) {
+                setSuccess(true);
+                console.log('Password reset link sent');
+            } else {
+                setError(true);
+                console.error('Failed to send password reset link');
+            }
+        } catch (err) {
+            setError(true);
+            console.error('Error sending password reset:', err);
+        }
+
+        setLoading(false);
+    };
+
     return (
         <div className="login-container">
             <div className="branding-section">
@@ -49,7 +87,6 @@ const Login = () => {
                     <p>Manage your network services, track installations, and monitor infrastructure seamlessly!</p>
                 </div>
             </div>
-
             <div className="form-section">
                 <div className="login-form">
                     <h2>Welcome Back!</h2>
@@ -61,8 +98,10 @@ const Login = () => {
                             {loading ? 'Logging in...' : 'Login Now'}
                         </button>
                     </form>
-                    <a href="#" className="forgot-password">Forgot password? Click here</a>
+
+                    <a href="#" onClick={handleForgotPassword} className="forgot-password">Forgot Password?</a>
                 </div>
+                
             </div>
 
             {error && (

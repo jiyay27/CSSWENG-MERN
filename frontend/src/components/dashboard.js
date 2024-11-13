@@ -42,7 +42,7 @@ const Dashboard = () => {
                         </Link>
                     </div>
                     <div className="card recent-activities">
-                        <h3><span className="icon">📝</span>Recent Activities</h3>
+                        <h3><span className="icon">📝</span>Recent Activities</h3> 
                         <ul>
                             <li>Item A added.</li>
                             <li>Item B updated.</li>
