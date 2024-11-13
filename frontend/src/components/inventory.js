@@ -408,7 +408,6 @@ const Inventory = () => {
                                 <th>Status</th>
                                 <th>Price</th>
                                 <th>Quantity</th>
-                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
