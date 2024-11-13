@@ -1,5 +1,5 @@
 // controllers/itemController.js
-const Item = require('../models/Item');
+const Item = require('../models/ItemModel');
 
 // Add a new item
 const addItem = async (req, res) => {

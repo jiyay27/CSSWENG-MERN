@@ -1,4 +1,4 @@
-const { Order, addOrder } = require('../models/Order');
+const { Order, addOrder } = require('../models/OrderModel');
 
 // Controller function to handle adding an order
 const addOrderHandler = async (req, res) => {
