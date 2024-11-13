@@ -1,0 +1,1 @@
+app.post('/api/items/add', categoryController.addCategory);

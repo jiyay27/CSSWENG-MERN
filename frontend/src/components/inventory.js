@@ -1,6 +1,6 @@
-// @inventory.js
-
+// inventory.js
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Sidebar from './Sidebar';
 import '../styles/inventory.css';
 
@@ -11,6 +11,7 @@ const Inventory = () => {
         category: 'Router',
         status: 'In Stock',
         price: '',
+        quantity: '',
         description: ''
     });
     const [editItem, setEditItem] = useState(null); // State for the item being edited
@@ -23,6 +24,9 @@ const Inventory = () => {
     });
 
     const [isAddingNew, setIsAddingNew] = useState(false);
+    const [isCreatingCustomCategory, setIsCreatingCustomCategory] = useState(false);
+
+    const [quantities, setQuantities] = useState({});
 
     const toggleAddNew = () => {
         setIsAddingNew(!isAddingNew);
@@ -45,35 +49,51 @@ const Inventory = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setNewItem(prevState => ({
-            ...prevState,
-            [name]: value
-        }));
+        if (name === 'category') {
+            if (value === '') {
+                setIsCreatingCustomCategory(true);
+            } else if (fixedCategories.includes(value)) {
+                setNewItem(prevState => ({
+                    ...prevState,
+                    [name]: value
+                }));
+        }
+        } else {
+            setNewItem(prevState => ({
+                ...prevState,
+                [name]: value
+            }));
+        }
     };
 
     // Add new item
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         try {
             const response = await fetch('http://localhost:5000/api/items/add', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(newItem),
+                body: JSON.stringify({
+                    ...newItem,
+                    customCategories: addedCustomCategories
+                }),
             });
 
             const data = await response.json();
             if (response.ok) {
-                setItems([...items, data.newItem]);  // Add new item to the state
+                setItems([...items, data.newItem]);
                 setNewItem({
                     itemName: '',
                     category: 'Router',
                     status: 'In Stock',
                     price: '',
+                    quantity: '',
                     description: ''
                 });
+                setAddedCustomCategories([]);
             } else {
                 console.error('Error adding item:', data.message);
             }
@@ -84,13 +104,20 @@ const Inventory = () => {
 
     // Delete item
     const handleDelete = async (id) => {
+        if (!window.confirm("Are you sure you want to delete this item?")) return;
+        
         try {
             const response = await fetch(`http://localhost:5000/api/items/delete/${id}`, {
                 method: 'DELETE',
             });
 
             if (response.ok) {
-                setItems(items.filter(item => item._id !== id));  // Remove deleted item from state
+                setItems(items.filter(item => item._id !== id));
+                setQuantities(prevQuantities => {
+                    const newQuantities = {...prevQuantities};
+                    delete newQuantities[id];
+                    return newQuantities;
+                });
             } else {
                 console.error('Error deleting item');
             }
@@ -132,6 +159,61 @@ const Inventory = () => {
         }
     };
     
+    const handleIncrement = async (itemId) => {
+        try {
+            const response = await axios.patch(`http://localhost:5000/api/items/increment/${itemId}`);
+            console.log('Increment response:', response.data); // Log the response for debugging
+    
+            if (response.data.success) {
+                const updatedItem = response.data.updateItem;
+    
+                // Update the item in the `items` array
+                setItems(prevItems =>
+                    prevItems.map(item => 
+                        item._id === updatedItem._id ? { ...item, quantity: updatedItem.quantity } : item
+                    )
+                );
+    
+                // Update the `quantities` state
+                setQuantities(prevQuantities => ({
+                    ...prevQuantities,
+                    [itemId]: updatedItem.quantity
+                }));
+            } else {
+                console.error('Error incrementing quantity:', response.data.message);
+            }
+        } catch (error) {
+            console.error('Error incrementing quantity:', error);
+        }
+    };
+    
+    const handleDecrement = async (itemId) => {
+        try {
+            const response = await axios.patch(`http://localhost:5000/api/items/decrement/${itemId}`);
+            console.log('Decrement response:', response.data); // Log the response for debugging
+    
+            if (response.data.success) {
+                const updatedItem = response.data.updateItem;
+    
+                // Update the item in the `items` array
+                setItems(prevItems =>
+                    prevItems.map(item => 
+                        item._id === updatedItem._id ? { ...item, quantity: updatedItem.quantity } : item
+                    )
+                );
+    
+                // Update the `quantities` state
+                setQuantities(prevQuantities => ({
+                    ...prevQuantities,
+                    [itemId]: updatedItem.quantity
+                }));
+            } else {
+                console.error('Error decrementing quantity:', response.data.message);
+            }
+        } catch (error) {
+            console.error('Error decrementing quantity:', error);
+        }
+    };
     
 
     // Filter items based on selected filters
@@ -144,6 +226,23 @@ const Inventory = () => {
             (searchTerm === '' || item.itemName.toLowerCase().includes(searchTerm.toLowerCase()))
         );
     });
+
+    const [fixedCategories, setFixedCategories] = useState(['Router', 'Access Point', 'Switch', 'Patch Panel', 'Cloud Key']);
+    const [customCategories, setCustomCategories] = useState([]);
+    const [customCategoryInput, setCustomCategoryInput] = useState('');
+    const [addedCustomCategories, setAddedCustomCategories] = useState([]);
+
+    const addCustomCategory = () => {
+        if (customCategoryInput.trim()) {
+        setAddedCustomCategories(prev => [...prev, customCategoryInput]);
+        setCustomCategoryInput('');
+        setIsCreatingCustomCategory(false);
+        }
+    };
+
+    const handleCreateCustomCategory = () => {
+        setIsCreatingCustomCategory(true);
+    };
 
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
@@ -188,18 +287,35 @@ const Inventory = () => {
                             />
 
                             <label htmlFor="category">Category:</label>
-                            <select
-                                id="category"
-                                name="category"
-                                value={newItem.category}
-                                onChange={handleChange}
-                                required
-                              >
-                                <option value="Router">Router</option>
-                                <option value="Access Point">Access Point</option>
-                                <option value="Switch">Switch</option>
-                                <option value="Patch Panel">Patch Panel</option>
-                            </select>
+                            <div className="category-input">
+                                {!isCreatingCustomCategory && (
+                                    <select 
+                                        id="category"
+                                        name="category"
+                                        value={newItem.category || ''}
+                                        onChange={(e) => handleChange(e)}
+                                    >
+                                        <option value="">Select a category</option>
+                                        {fixedCategories.map((category) => (
+                                            <option key={category} value={category}>{category}</option>
+                                        ))}
+                                    </select>
+                                )}
+                                {isCreatingCustomCategory && (
+                                    <input
+                                        type="text"
+                                        placeholder="Enter custom category..."
+                                        value={customCategoryInput}
+                                        onChange={(e) => setCustomCategoryInput(e.target.value)}
+                                    />
+                                )}
+                                {isCreatingCustomCategory && (
+                                    <button onClick={() => setIsCreatingCustomCategory(false)}>Cancel</button>
+                                )}
+                                {isCreatingCustomCategory && (
+                                    <button onClick={addCustomCategory}>Add Custom Category</button>
+                                )}
+                            </div>
 
                             <label htmlFor="status">Status:</label>
                             <select
@@ -220,6 +336,16 @@ const Inventory = () => {
                                 id="price"
                                 name="price"
                                 value={newItem.price}
+                                onChange={handleChange}
+                                required
+                            />
+
+                            <label htmlFor="quantity">Quantity:</label>
+                            <input
+                                type="number"
+                                id="quantity"
+                                name="quantity"
+                                value={newItem.quantity}
                                 onChange={handleChange}
                                 required
                             />
@@ -246,6 +372,7 @@ const Inventory = () => {
                             <option value="Access Point">Access Point</option>
                             <option value="Switch">Switch</option>
                             <option value="Patch Panel">Patch Panel</option>
+                            <option value="Cloud Key">Cloud Key</option>
                         </select>
 
                         <select name="status" value={filters.status} onChange={handleFilterChange}>
@@ -280,6 +407,7 @@ const Inventory = () => {
                                 <th>Category</th>
                                 <th>Status</th>
                                 <th>Price</th>
+                                <th>Quantity</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -291,6 +419,9 @@ const Inventory = () => {
                                     <td>{item.status}</td>
                                     <td>${item.price}</td>
                                     <td>
+                                        <button className="increment-btn" onClick={() => handleIncrement(item._id)}>+</button>
+                                        <span>{item.quantity}</span>
+                                        <button className="decrement-btn" onClick={() => handleDecrement(item._id)}>-</button>
                                         <button className="edit-btn" onClick={() => handleEdit(item)}>Edit</button>
                                         <button className="delete-btn" onClick={() => handleDelete(item._id)}>Delete</button>
                                     </td>
@@ -325,6 +456,7 @@ const Inventory = () => {
                                 <option value="Access Point">Access Point</option>
                                 <option value="Switch">Switch</option>
                                 <option value="Patch Panel">Patch Panel</option>
+                                <option value="Cloud Key">Cloud Key</option>
                             </select>
 
                             <label htmlFor="status">Status:</label>
@@ -345,6 +477,15 @@ const Inventory = () => {
                                 name="price"
                                 value={editItem.price}
                                 onChange={(e) => setEditItem({ ...editItem, price: e.target.value })}
+                                required
+                            />
+
+                            <label htmlFor="quantity">Quantity:</label>
+                            <input
+                                type="number"
+                                name="quantity"
+                                value={editItem.quantity}
+                                onChange={(e) => setEditItem({ ...editItem, quantity: e.target.value })}
                                 required
                             />
 
