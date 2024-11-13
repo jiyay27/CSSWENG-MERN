@@ -27,31 +27,15 @@ ChartJS.register(
                 const items = await response.json();
     
                 
-                const itemslist = [...new Set(items.map(item => item.category))];
-    
-    
-                const itemstock = itemslist.reduce((acc, category) => {
-                    acc[category] = 0;
-                    return acc;
-                }, {});
-    
-                items.forEach(item => {
-                    if (itemstock[item.category] !== undefined) {
-                        itemstock[item.category]++;
-                    }
-                });
+                const labels = items.map(item => item.category);
+                const data = items.map(item => item.quantity);
+
                 setChartData({
-                    labels: Object.keys(itemstock),
+                    labels: labels,
                     datasets: [
                         {
                             label: "Current Stock",
-                            data: Object.values(itemstock),
-                            backgroundColor: [
-                                "#FF6384",
-                                "#36A2EB",
-                                "#FFCE56",
-                                "#4BC0C0"
-                            ],
+                            data: data,
                             borderWidth: 4,
                         }
                     ]
@@ -69,11 +53,9 @@ ChartJS.register(
             legend: {
                 position: "right",
                 labels:{
-                    color: "#ffffff",
                     font: {
                         family: 'Arial',  
                         size: 14,
-                        style: 'normal',
                     },
                     generateLabels: (chart) => {
                         const labels = chart.data.labels;
@@ -100,30 +82,13 @@ ChartJS.register(
         }
     };
 
-    const data = {
-        labels: ["Router", "Ethernet Cable", "Switch", "Mesh"],
-        datasets: [
-            {
-                label: "Current Stock",
-                data: [30, 50, 0, 20],
-                backgroundColor: [
-                    "#FF6384",  //Router
-                    "#36A2EB",  //Ethernet Cable
-                    "#FFCE56",  //Switch
-                    "#4BC0C0"   //Mesh
-                ],
-                borderWidth: 4,
-            }
-        ]
-    };
-
     return chartData ? (
         <div style={{ width: '400px', height: '300px' }}>
             <Doughnut options={options} data={chartData} />
         </div>
     ) : (
-        <div style={{ width: '400px', height: '300px' }}>
-            <Doughnut options={options} data={data} />
+        <div>
+            Error Loading Data....
         </div>
     );
 };
