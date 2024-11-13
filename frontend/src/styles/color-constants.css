@@ -1,0 +1,20 @@
+/* color-constants.css */
+:root {
+    --primary-color: #F57909;
+    --secondary-color: #FC450C;
+    --background-color: #ffffff;
+    --text-color: #17275E;
+    --accent-color: #FFC107;
+  }
+
+#homepage {
+  text-align: center;
+}
+
+#homepage header img {
+  max-width: 200px;
+}
+
+.contact-info {
+  margin-top: 1.5em;
+}

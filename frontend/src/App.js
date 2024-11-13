@@ -7,6 +7,7 @@ import PendingOrders from './components/PendingOrders';
 import ViewOrders from './components/ViewOrders';
 import SalesReports from './components/SalesReports';
 import InventoryReports from './components/InventoryReports';
+import ViewItems from './components/ViewItems';
 
 function App() {
     return (

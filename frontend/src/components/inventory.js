@@ -1,3 +1,5 @@
+// @inventory.js
+
 import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import '../styles/inventory.css';
@@ -19,6 +21,12 @@ const Inventory = () => {
         priceMin: '',
         priceMax: ''
     });
+
+    const [isAddingNew, setIsAddingNew] = useState(false);
+
+    const toggleAddNew = () => {
+        setIsAddingNew(!isAddingNew);
+    };
 
     // Fetch items from the backend
     useEffect(() => {
@@ -158,12 +166,77 @@ const Inventory = () => {
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
-                        <div className="user-profile">
-                            <span className="emoji">😊</span>
-                            <span>Username</span>
-                        </div>
+                        
+                        <button className="add-new-item-button" onClick={toggleAddNew}>
+                          {isAddingNew ? 'Close Form' : 'Add New Item'}
+                        </button>
                     </div>
                 </header>
+
+                {isAddingNew && (
+                    <div className="add-item-card">
+                        <h2>Add New Item</h2>
+                        <form onSubmit={handleSubmit}>
+                            <label htmlFor="itemName">Item Name:</label>
+                            <input
+                                type="text"
+                                id="itemName"
+                                name="itemName"
+                                value={newItem.itemName}
+                                onChange={handleChange}
+                                required
+                            />
+
+                            <label htmlFor="category">Category:</label>
+                            <select
+                                id="category"
+                                name="category"
+                                value={newItem.category}
+                                onChange={handleChange}
+                                required
+                              >
+                                <option value="Router">Router</option>
+                                <option value="Access Point">Access Point</option>
+                                <option value="Switch">Switch</option>
+                                <option value="Patch Panel">Patch Panel</option>
+                            </select>
+
+                            <label htmlFor="status">Status:</label>
+                            <select
+                                id="status"
+                                name="status"
+                                value={newItem.status}
+                                onChange={handleChange}
+                                required
+                              >
+                                <option value="In Stock">In Stock</option>
+                                <option value="Low Stock">Low Stock</option>
+                                <option value="Out of Stock">Out of Stock</option>
+                            </select>
+
+                            <label htmlFor="price">Price:</label>
+                            <input
+                                type="number"
+                                id="price"
+                                name="price"
+                                value={newItem.price}
+                                onChange={handleChange}
+                                required
+                            />
+
+                            <label htmlFor="description">Description:</label>
+                            <textarea
+                                id="description"
+                                name="description"
+                                rows="4"
+                                value={newItem.description}
+                                onChange={handleChange}
+                            ></textarea>
+
+                            <button type="submit">Add Item</button>
+                        </form>
+                    </div>
+                )}
 
                 <div className="inventory-header">
                     <div className="filters">
@@ -197,70 +270,6 @@ const Inventory = () => {
                             onChange={handleFilterChange}
                         />
                     </div>
-                </div>
-
-                {/* Form to Add New Item */}
-                <div className="add-item-form">
-                    <h2>Add New Item</h2>
-                    <form id="addItemForm" onSubmit={handleSubmit}>
-                        <label htmlFor="itemName">Item Name:</label>
-                        <input
-                            type="text"
-                            id="itemName"
-                            name="itemName"
-                            value={newItem.itemName}
-                            onChange={handleChange}
-                            required
-                        />
-
-                        <label htmlFor="category">Category:</label>
-                        <select
-                            id="category"
-                            name="category"
-                            value={newItem.category}
-                            onChange={handleChange}
-                            required
-                        >
-                            <option value="Router">Router</option>
-                            <option value="Access Point">Access Point</option>
-                            <option value="Switch">Switch</option>
-                            <option value="Patch Panel">Patch Panel</option>
-                        </select>
-
-                        <label htmlFor="status">Status:</label>
-                        <select
-                            id="status"
-                            name="status"
-                            value={newItem.status}
-                            onChange={handleChange}
-                            required
-                        >
-                            <option value="In Stock">In Stock</option>
-                            <option value="Low Stock">Low Stock</option>
-                            <option value="Out of Stock">Out of Stock</option>
-                        </select>
-
-                        <label htmlFor="price">Price:</label>
-                        <input
-                            type="number"
-                            id="price"
-                            name="price"
-                            value={newItem.price}
-                            onChange={handleChange}
-                            required
-                        />
-
-                        <label htmlFor="description">Description:</label>
-                        <textarea
-                            id="description"
-                            name="description"
-                            rows="4"
-                            value={newItem.description}
-                            onChange={handleChange}
-                        ></textarea>
-
-                        <button type="submit">Add Item</button>
-                    </form>
                 </div>
 
                 <div className="inventory-table">

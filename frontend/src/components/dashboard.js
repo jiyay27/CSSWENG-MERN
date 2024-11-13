@@ -37,7 +37,9 @@ const Dashboard = () => {
                     <div className="card low-stock">
                         <h3><span className="icon">⚠️</span>Low Stock Alerts</h3>
                         <p>5 Items</p>
-                        <button>View Alerts</button>
+                        <Link to="/reports/inventory">
+                            <button>View Alerts</button>
+                        </Link>
                     </div>
                     <div className="card recent-activities">
                         <h3><span className="icon">📝</span>Recent Activities</h3>
