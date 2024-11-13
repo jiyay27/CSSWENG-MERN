@@ -3,7 +3,7 @@ const Item = require('../models/Item');
 
 // Add a new item
 const addItem = async (req, res) => {
-    const { itemName, category, status, price, description } = req.body;
+    const { itemName, category, status, price, description, quantity } = req.body;
 
     try {
         const newItem = new Item({
@@ -11,7 +11,8 @@ const addItem = async (req, res) => {
             category,
             status,
             price,
-            description
+            description,
+            quantity
         });
 
         await newItem.save();
@@ -35,13 +36,13 @@ const getItems = async (req, res) => {
 // controllers/itemController.js
 const updateItem = async (req, res) => {
     const { id } = req.params;
-    const { itemName, category, status, price, description } = req.body;
+    const { itemName, category, status, price, description, quantity } = req.body;
 
     try {
         // Check if the item exists before trying to update it
         const updatedItem = await Item.findByIdAndUpdate(
             id,
-            { itemName, category, status, price, description },
+            { itemName, category, status, price, description, quantity },
             { new: true, runValidators: true } // `runValidators` to ensure schema validation
         );
 
@@ -56,7 +57,53 @@ const updateItem = async (req, res) => {
     }
 };
 
+// Increment item quantity
+const incrementItem = async (req, res) => {
+    const { id } = req.params;
+    const { quantity } = req.body;
 
+    try {
+        // Check if the item exists before trying to update it
+        const updateItem = await Item.findByIdAndUpdate(
+            id,
+            { $inc: { quantity } },
+            { new: true, runValidators: true } // `runValidators` to ensure schema validation
+        );
+
+        if (!updatedItem) {
+            return res.status(404).json({ message: 'Item not found' });
+        }
+
+        res.status(200).json({ message: 'Item quantity successfully incremented', updateItem });
+    } catch (error) {
+        console.error('Error incrementing item quantity:', error); // Add logging
+        res.status(500).json({ message: 'Error incrementing item quantity', error });
+    }
+};
+
+// Decrement item quantity
+const decrementItem = async (req, res) => {
+    const { id } = req.params;
+    const { quantity } = req.body;
+
+    try {
+        // Check if the item exists before trying to update it
+        const updateItem = await Item.findByIdAndUpdate(
+            id,
+            { $dec: { quantity } },
+            { new: true, runValidators: true } // `runValidators` to ensure schema validation
+        );
+
+        if (!updatedItem) {
+            return res.status(404).json({ message: 'Item not found' });
+        }
+
+        res.status(200).json({ message: 'Item quantity successfully incremented', updateItem });
+    } catch (error) {
+        console.error('Error incrementing item quantity:', error); // Add logging
+        res.status(500).json({ message: 'Error incrementing item quantity', error });
+    }
+};
 
 
 // Delete an item
@@ -97,4 +144,4 @@ const filterItems = async (req, res) => {
     }
 };
 
-module.exports = { addItem, getItems, updateItem, deleteItem, filterItems };
+module.exports = { addItem, getItems, updateItem, deleteItem, filterItems, incrementItem, decrementItem };
