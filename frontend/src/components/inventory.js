@@ -229,13 +229,16 @@ const Inventory = () => {
 
     // Filter items based on selected filters
     const filteredItems = items.filter(item => {
-        return (
-            (filters.category === '' || item.category === filters.category) &&
-            (filters.status === '' || item.status === filters.status) &&
-            (filters.priceMin === '' || item.price >= Number(filters.priceMin)) &&
-            (filters.priceMax === '' || item.price <= Number(filters.priceMax)) &&
-            (searchTerm === '' || item.itemName.toLowerCase().includes(searchTerm.toLowerCase()))
-        );
+        const matchesCategory = !filters.category || item.category === filters.category;
+        const matchesStatus = !filters.status || item.status === filters.status;
+        const matchesPriceMin = !filters.priceMin || item.price >= parseFloat(filters.priceMin);
+        const matchesPriceMax = !filters.priceMax || item.price <= parseFloat(filters.priceMax);
+        const matchesSearch = !searchTerm || 
+            item.itemName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            item.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            item.description.toLowerCase().includes(searchTerm.toLowerCase());
+
+        return matchesCategory && matchesStatus && matchesPriceMin && matchesPriceMax && matchesSearch;
     });
 
     const [fixedCategories, setFixedCategories] = useState(['Router', 'Access Point', 'Switch', 'Patch Panel', 'Cloud Key']);
@@ -287,88 +290,81 @@ const Inventory = () => {
                     <div className="add-item-card">
                         <h2>Add New Item</h2>
                         <form onSubmit={handleSubmit}>
-                            <label htmlFor="itemName">Item Name:</label>
-                            <input
-                                type="text"
-                                id="itemName"
-                                name="itemName"
-                                value={newItem.itemName}
-                                onChange={handleChange}
-                                required
-                            />
-
-                            <label htmlFor="category">Category:</label>
-                            <div className="category-input">
-                                {!isCreatingCustomCategory && (
-                                    <select 
-                                        id="category"
-                                        name="category"
-                                        value={newItem.category || ''}
-                                        onChange={(e) => handleChange(e)}
-                                    >
-                                        <option value="">Select a category</option>
-                                        {fixedCategories.map((category) => (
-                                            <option key={category} value={category}>{category}</option>
-                                        ))}
-                                    </select>
-                                )}
-                                {isCreatingCustomCategory && (
-                                    <input
-                                        type="text"
-                                        placeholder="Enter custom category..."
-                                        value={customCategoryInput}
-                                        onChange={(e) => setCustomCategoryInput(e.target.value)}
-                                    />
-                                )}
-                                {isCreatingCustomCategory && (
-                                    <button onClick={() => setIsCreatingCustomCategory(false)}>Cancel</button>
-                                )}
-                                {isCreatingCustomCategory && (
-                                    <button onClick={addCustomCategory}>Add Custom Category</button>
-                                )}
+                            <div className="form-group">
+                                <label htmlFor="itemName">Item Name</label>
+                                <input
+                                    type="text"
+                                    id="itemName"
+                                    name="itemName"
+                                    value={newItem.itemName}
+                                    onChange={handleChange}
+                                    required
+                                />
                             </div>
 
-                            <label htmlFor="status">Status:</label>
-                            <select
-                                id="status"
-                                name="status"
-                                value={newItem.status}
-                                onChange={handleChange}
-                                required
-                              >
-                                <option value="In Stock">In Stock</option>
-                                <option value="Low Stock">Low Stock</option>
-                                <option value="Out of Stock">Out of Stock</option>
-                            </select>
+                            <div className="form-group">
+                                <label htmlFor="category">Category</label>
+                                <select 
+                                    id="category"
+                                    name="category"
+                                    value={newItem.category}
+                                    onChange={handleChange}
+                                >
+                                    {fixedCategories.map((category) => (
+                                        <option key={category} value={category}>{category}</option>
+                                    ))}
+                                </select>
+                            </div>
 
-                            <label htmlFor="price">Price:</label>
-                            <input
-                                type="number"
-                                id="price"
-                                name="price"
-                                value={newItem.price}
-                                onChange={handleChange}
-                                required
-                            />
+                            <div className="form-group">
+                                <label htmlFor="status">Status</label>
+                                <select
+                                    id="status"
+                                    name="status"
+                                    value={newItem.status}
+                                    onChange={handleChange}
+                                    required
+                                >
+                                    <option value="In Stock">In Stock</option>
+                                    <option value="Low Stock">Low Stock</option>
+                                    <option value="Out of Stock">Out of Stock</option>
+                                </select>
+                            </div>
 
-                            <label htmlFor="quantity">Quantity:</label>
-                            <input
-                                type="number"
-                                id="quantity"
-                                name="quantity"
-                                value={newItem.quantity}
-                                onChange={handleChange}
-                                required
-                            />
+                            <div className="form-group">
+                                <label htmlFor="price">Price</label>
+                                <input
+                                    type="number"
+                                    id="price"
+                                    name="price"
+                                    value={newItem.price}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
 
-                            <label htmlFor="description">Description:</label>
-                            <textarea
-                                id="description"
-                                name="description"
-                                rows="4"
-                                value={newItem.description}
-                                onChange={handleChange}
-                            ></textarea>
+                            <div className="form-group">
+                                <label htmlFor="quantity">Quantity</label>
+                                <input
+                                    type="number"
+                                    id="quantity"
+                                    name="quantity"
+                                    value={newItem.quantity}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+
+                            <div className="form-group description-group">
+                                <label htmlFor="description">Description</label>
+                                <input
+                                    type="text"
+                                    id="description"
+                                    name="description"
+                                    value={newItem.description}
+                                    onChange={handleChange}
+                                />
+                            </div>
 
                             <button type="submit">Add Item</button>
                         </form>
@@ -425,108 +421,108 @@ const Inventory = () => {
                                 </tr>
                             </thead>
                             <tbody>
-  {items.map((item) =>
-    editItemId === item._id ? (
-      // Edit Mode Row
-      <tr key={item._id}>
-        <td>
-          <input
-            type="text"
-            required
-            name="itemName"
-            value={editFormData.itemName}
-            onChange={handleEditFormChange}
-          />
-        </td>
-        <td>
-          <input
-            type="number"
-            required
-            name="quantity"
-            value={editFormData.quantity}
-            onChange={handleEditFormChange}
-            min="0"
-          />
-        </td>
-        <td>
-          <select
-            name="status"
-            value={editFormData.status}
-            onChange={handleEditFormChange}
-          >
-            <option value="In Stock">In Stock</option>
-            <option value="Low Stock">Low Stock</option>
-            <option value="Out of Stock">Out of Stock</option>
-          </select>
-        </td>
-        <td>
-          <input
-            type="number"
-            required
-            name="price"
-            value={editFormData.price}
-            onChange={handleEditFormChange}
-            min="0"
-            step="0.01"
-          />
-        </td>
-        <td>
-          <input
-            type="text"
-            required
-            name="category"
-            value={editFormData.category}
-            onChange={handleEditFormChange}
-          />
-        </td>
-        <td>
-          <input
-            type="text"
-            required
-            name="description"
-            value={editFormData.description}
-            onChange={handleEditFormChange}
-          />
-        </td>
-        <td>
-          <button type="submit" className="save-btn">
-            Save
-          </button>
-          <button type="button" onClick={handleCancelClick} className="cancel-btn">
-            Cancel
-          </button>
-        </td>
-      </tr>
-    ) : (
-      // Read-Only Mode Row
-      <tr key={item._id}>
-        <td>{item.itemName}</td>
-        <td>
-          <input type="number" value={item.quantity} disabled />
-        </td>
-        <td>{item.status}</td>
-        <td>${item.price.toFixed(2)}</td>
-        <td>{item.category}</td>
-        <td>{item.description}</td>
-        <td>
-          <button
-            type="button"
-            onClick={(event) => handleEditClick(event, item)}
-            className="edit-btn"
-          >
-            Edit
-          </button>
-          <button
-            type="button"
-            onClick={() => handleDeleteClick(item._id)}
-            className="delete-btn"
-          >
-            Delete
-          </button>
-        </td>
-      </tr>
-    )
-  )}
+    {filteredItems.map((item) =>
+        editItemId === item._id ? (
+        // Edit Mode Row
+        <tr key={item._id}>
+            <td>
+            <input
+                type="text"
+                required
+                name="itemName"
+                value={editFormData.itemName}
+                onChange={handleEditFormChange}
+            />
+            </td>
+            <td>
+            <input
+                type="number"
+                required
+                name="quantity"
+                value={editFormData.quantity}
+                onChange={handleEditFormChange}
+                min="0"
+            />
+            </td>
+            <td>
+            <select
+                name="status"
+                value={editFormData.status}
+                onChange={handleEditFormChange}
+            >
+                <option value="In Stock">In Stock</option>
+                <option value="Low Stock">Low Stock</option>
+                <option value="Out of Stock">Out of Stock</option>
+            </select>
+            </td>
+            <td>
+            <input
+                type="number"
+                required
+                name="price"
+                value={editFormData.price}
+                onChange={handleEditFormChange}
+                min="0"
+                step="0.01"
+            />
+            </td>
+            <td>
+            <input
+                type="text"
+                required
+                name="category"
+                value={editFormData.category}
+                onChange={handleEditFormChange}
+            />
+            </td>
+            <td>
+            <input
+                type="text"
+                required
+                name="description"
+                value={editFormData.description}
+                onChange={handleEditFormChange}
+            />
+            </td>
+            <td>
+            <button type="submit" className="save-btn">
+                Save
+            </button>
+            <button type="button" onClick={handleCancelClick} className="cancel-btn">
+                Cancel
+            </button>
+            </td>
+        </tr>
+        ) : (
+        // Read-Only Mode Row
+        <tr key={item._id}>
+            <td>{item.itemName}</td>
+            <td>
+            <input type="number" value={item.quantity} disabled />
+            </td>
+            <td>{item.status}</td>
+            <td>${item.price.toFixed(2)}</td>
+            <td>{item.category}</td>
+            <td>{item.description}</td>
+            <td>
+            <button
+                type="button"
+                onClick={(event) => handleEditClick(event, item)}
+                className="edit-btn"
+            >
+                Edit
+            </button>
+            <button
+                type="button"
+                onClick={() => handleDeleteClick(item._id)}
+                className="delete-btn"
+            >
+                Delete
+            </button>
+            </td>
+        </tr>
+        )
+    )}
 </tbody>
                         </table>
                     </form>

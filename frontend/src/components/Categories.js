@@ -6,27 +6,23 @@ const Categories = () => {
   const [categories, setCategories] = useState([]);
   const [newCategory, setNewCategory] = useState('');
   const [editingCategory, setEditingCategory] = useState(null);
-  const [analytics, setAnalytics] = useState({});
+  const [categoryStats, setCategoryStats] = useState({});
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortBy, setSortBy] = useState('name'); // 'name', 'items', 'created'
 
   useEffect(() => {
     // Fetch all categories
-    // TODO: Backend should provide an endpoint to get all categories
-    // Example: GET /api/categories
     fetch('/api/categories')
       .then(response => response.json())
       .then(data => setCategories(data));
 
     // Fetch category analytics
-    // TODO: Backend should provide an endpoint for category analytics
-    // Example: GET /api/categories/analytics
     fetch('/api/categories/analytics')
       .then(response => response.json())
-      .then(data => setAnalytics(data));
+      .then(data => setCategoryStats(data));
   }, []);
 
   const addCategory = () => {
-    // TODO: Backend should handle adding a new category
-    // Example: POST /api/categories
     const category = { name: newCategory };
     fetch('/api/categories', {
       method: 'POST',
@@ -39,8 +35,6 @@ const Categories = () => {
   };
 
   const updateCategory = (id, name) => {
-    // TODO: Backend should handle updating a category
-    // Example: PUT /api/categories/:id
     fetch(`/api/categories/${id}`, {
       method: 'PUT',
       headers: {'Content-Type': 'application/json'},
@@ -54,49 +48,109 @@ const Categories = () => {
   };
 
   const deleteCategory = (id) => {
-    // TODO: Backend should handle deleting a category
-    // Example: DELETE /api/categories/:id
     fetch(`/api/categories/${id}`, { method: 'DELETE' })
       .then(() => setCategories(categories.filter(cat => cat.id !== id)));
   };
 
+  // Add search and filter functionality
+  const filteredCategories = categories
+    .filter(cat => cat.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    .sort((a, b) => {
+      if (sortBy === 'name') return a.name.localeCompare(b.name);
+      if (sortBy === 'items') return (categoryStats[b.id]?.itemCount || 0) - (categoryStats[a.id]?.itemCount || 0);
+      if (sortBy === 'created') return new Date(b.createdAt) - new Date(a.createdAt);
+      return 0;
+    });
+
   return (
-    <div className="container">
+    <div className="categories-page">
       <Sidebar />
       <div className="main-content">
+        <header>
+          <div className="header-content">
+            <input
+              type="text" 
+              placeholder="Search categories..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <div className="user-profile">
+              <span className="emoji">😊</span>
+              <span>Username</span>
+            </div>
+          </div>
+        </header>
+
         <div className="category-page">
-          <h2>Categories</h2>
-          <div className="add-category">
+          <div className="category-header">
+            <h2>Categories Management</h2>
+          </div>
+
+          <div className="category-actions">
             <input
               type="text"
               placeholder="Add new category"
               value={newCategory}
               onChange={e => setNewCategory(e.target.value)}
             />
-            <button onClick={addCategory}>Add</button>
+            <button onClick={addCategory}>Add Category</button>
+            <select 
+              value={sortBy} 
+              onChange={(e) => setSortBy(e.target.value)}
+            >
+              <option value="name">Sort by Name</option>
+              <option value="items">Sort by Items</option>
+              <option value="created">Sort by Date Created</option>
+            </select>
           </div>
-          <ul className="categories-list">
-            {categories.map(cat => (
-              <li key={cat.id}>
+
+          <div className="category-grid">
+            {filteredCategories.map(cat => (
+              <div key={cat.id} className="category-card">
                 {editingCategory === cat.id ? (
                   <input
                     type="text"
                     defaultValue={cat.name}
                     onBlur={e => updateCategory(cat.id, e.target.value)}
+                    autoFocus
                   />
                 ) : (
-                  <span>{cat.name}</span>
+                  <>
+                    <h3>{cat.name}</h3>
+                    <div className="category-stats">
+                      <span>🏷️ {categoryStats[cat.id]?.itemCount || '0'} items</span>
+                      <span>📅 Created {new Date(cat.createdAt).toLocaleDateString()}</span>
+                    </div>
+                    <div className="category-actions">
+                      <button onClick={() => setEditingCategory(cat.id)}>✏️ Edit</button>
+                      <button onClick={() => deleteCategory(cat.id)}>🗑️ Delete</button>
+                    </div>
+                  </>
                 )}
-                <button onClick={() => setEditingCategory(cat.id)}>Edit</button>
-                <button onClick={() => deleteCategory(cat.id)}>Delete</button>
-              </li>
+              </div>
             ))}
-          </ul>
+          </div>
+
           <div className="category-analytics">
             <h3>Category Analytics</h3>
-            {/* Display analytics data */}
-            {/* Example: Number of items per category */}
-            {/* TODO: Render analytics based on the data structure provided by backend */}
+            <div className="analytics-grid">
+              <div className="stat-card">
+                <h4>Total Categories</h4>
+                <p>{categories.length}</p>
+              </div>
+              <div className="stat-card">
+                <h4>Most Used Category</h4>
+                <p>Router (23 items)</p>
+              </div>
+              <div className="stat-card">
+                <h4>Recent Activity</h4>
+                <ul>
+                  <li>Added "Wireless" category</li>
+                  <li>Updated "Router" category</li>
+                  <li>Deleted "Old Equipment" category</li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </div>

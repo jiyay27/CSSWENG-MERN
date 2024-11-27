@@ -99,6 +99,8 @@ body {
     padding: 20px;
     flex: 1;
     transition: margin-left 0.3s ease;
+    position: relative;
+    width: calc(100% - 250px);
 }
 
 header {
@@ -109,12 +111,19 @@ header {
     background-color: var(--secondary-color);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
+    width: calc(100% + 40px);
+    margin-left: -20px;
+    margin-top: -20px;
+    padding-left: 40px;
+    box-sizing: border-box;
 }
 
 .header-content {
     display: flex;
     align-items: center;
     width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .header-content input[type="text"] {
@@ -122,16 +131,26 @@ header {
     border: 1px solid var(--primary-color);
     border-radius: 5px;
     margin-right: 15px;
+    min-width: 200px;
+    width: 30%;
 }
 
 .user-profile {
     display: flex;
     align-items: center;
     margin-left: auto;
+    position: relative;
+    cursor: pointer;
 }
+
 .user-profile .emoji {
     font-size: 40px;
     margin-right: 10px;
+    transition: transform 0.2s ease;
+}
+
+.user-profile .emoji:hover {
+    transform: scale(1.1);
 }
 
 .user-profile span {
@@ -144,6 +163,7 @@ header {
     gap: 20px;
 }
 
+/* Update the card class */
 .card {
     background-color: var(--secondary-color);
     color: #FFFFFF;
@@ -152,53 +172,110 @@ header {
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     transition: background-color 0.3s ease;
+    position: relative; /* Add this for button positioning */
+    display: flex;
+    flex-direction: column;
+    min-height: 200px; /* Set minimum height for consistent card sizes */
+}
+
+/* Style the card content */
+.card h3 {
+    margin: 0 0 15px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.card p {
+    font-size: 1.5em;
+    margin: 10px 0;
+}
+
+/* Style the card lists */
+.card ul {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+}
+
+.card li {
+    margin-bottom: 8px;
+}
+
+/* Position the button container */
+.card a {
+    margin-top: auto; /* Push to bottom */
+    align-self: flex-end; /* Align to right */
+    text-decoration: none;
+}
+
+/* Style the buttons */
+.card button {
+    background-color: var(--accent-color);
+    color: #FFFFFF;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.card.trends {
+    display: flex;
+    flex-direction: column;
+    min-height: 400px;
+}
+
+.card.trends h3 {
+    margin-bottom: 20px;
 }
 
 .card:hover {
     background-color: var(--primary-color);
 }
 
-.card h3 {
-    margin: 0 0 10px;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-.card button {
-    background-color: var(--accent-color);
-    color: #FFFFFF;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.card button:hover {
-    background-color: var(--primary-color);
-    transform: scale(1.05);
-}
 ul.user-menu {
     list-style: none;
-    padding: 10px 15px;
+    padding: 0;
     position: absolute;
-    right: 5px;
-    top: 4.2rem;
-}
-ul.user-menu li {
-    width: 150px;
+    right: 0;
+    top: calc(100% + 5px);
     background-color: var(--secondary-color);
-}
-.user-menu a{
-    color: #FFFFFF; 
-    text-decoration: none; 
-    display: block; 
-    padding: 10px 15px; 
-    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    min-width: 180px;
+    z-index: 1000;
+    animation: fadeIn 0.2s ease-in-out;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.user-menu li:hover{
-    background-color: var(--primary-color); 
+ul.user-menu li {
+    width: 100%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+ul.user-menu li:last-child {
+    border-bottom: none;
+}
+
+.user-menu a {
+    color: #FFFFFF;
+    text-decoration: none;
+    display: block;
+    padding: 12px 20px;
+    text-align: left;
+    transition: all 0.2s ease;
+}
+
+.user-menu li:hover {
+    background-color: var(--primary-color);
     cursor: pointer;
+}
+
+.user-menu a:hover {
+    padding-left: 25px;
 }
 
 .sidebar.collapsed {
@@ -236,6 +313,11 @@ ul.user-menu li {
 
     .main-content {
         margin-left: 200px;
+        width: calc(100% - 60px);
+    }
+
+    header {
+        padding-left: 20px;
     }
 
     .header-content {
@@ -244,5 +326,16 @@ ul.user-menu li {
 
     .cards {
         grid-template-columns: 1fr;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }

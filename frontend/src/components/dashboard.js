@@ -15,10 +15,10 @@ const Dashboard = () => {
                     <div className="header-content">
                         <input type="text" placeholder="Search..." />
                         <div className="user-profile">
-                            <span className="emoji" onClick={()=> setOpenProfile((prev)=> !prev)}>😊</span><span>Username</span>
-                            {
-                                openProfile && 
-                                <ul class="user-menu">
+                            <span className="emoji" onClick={() => setOpenProfile((prev) => !prev)}>😊</span>
+                            <span>Username</span>
+                            {openProfile && 
+                                <ul className="user-menu">
                                     <li><a href=''>Profile</a></li>
                                     <li><a href='/'>Log Out</a></li>
                                 </ul>
