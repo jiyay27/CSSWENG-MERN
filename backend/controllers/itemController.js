@@ -1,6 +1,6 @@
 // controllers/itemController.js
 const Item = require('../models/ItemModel');
-const Transaction = require('../models/Transaction');
+const Transaction = require('../models/TransactionModel');
 
 const LOW_STOCK_THRESHOLD = 10;
 const NO_STOCK_THRESHOLD = 0;
