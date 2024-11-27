@@ -49,6 +49,8 @@ bower_components
 node_modules/
 jspm_packages/
 
+build/
+/build
 
 ### VisualStudioCode ###
 .vscode/*
