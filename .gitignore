@@ -12,7 +12,7 @@ lerna-debug.log*
 .pnpm-debug.log*
 
 # misc
-#.env
+.env
 .env.local
 .env.development.local
 .env.test.local
@@ -48,6 +48,7 @@ bower_components
 /jspm_packages
 node_modules/
 jspm_packages/
+
 
 ### VisualStudioCode ###
 .vscode/*
