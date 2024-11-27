@@ -17,203 +17,123 @@ ChartJS.register(
   Legend
 );
 
-let chartInstance = null;
-
-const DoughnutChart = ({ data }) => {
+const DoughnutChart = () => {
   const [chartData, setChartData] = useState(null);
 
   useEffect(() => {
-    if (chartInstance) {
-      chartInstance.destroy();
-    }
-    chartInstance = null;
-
     const fetchData = async () => {
       try {
-        if (!data || !Array.isArray(data.datasets) || data.datasets.length === 0 || !Array.isArray(data.datasets[0].data) || data.datasets[0].data.length === 0) {
-          console.warn("No valid data provided");
-          setChartData(null);
-          return;
-        }
+        const response = await fetch('http://localhost:5000/api/items');
+        const items = await response.json();
 
-        setChartData(data);
+        // Group items by category and sum their quantities
+        const categoryData = items.reduce((acc, item) => {
+          if (!acc[item.category]) {
+            acc[item.category] = 0;
+          }
+          acc[item.category] += item.quantity || 0;
+          return acc;
+        }, {});
+
+        const labels = Object.keys(categoryData);
+        const data = Object.values(categoryData);
+
+        // Generate random colors for each category
+        const backgroundColor = labels.map(() => 
+          `hsl(${Math.random() * 360}, 70%, 50%)`
+        );
+
+        setChartData({
+          labels: labels,
+          datasets: [{
+            data: data,
+            backgroundColor: getChartColors(labels.length),
+            borderWidth: 2,
+            borderColor: '#2C3E50'
+          }]
+        });
       } catch (error) {
-        console.error("Error processing data:", error);
+        console.error('Error fetching chart data:', error);
         setChartData(null);
       }
     };
 
     fetchData();
-  }, [data]);
+  }, []);
 
   const options = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: "right",
-        labels:{
+        position: 'right',
+        labels: {
+          color: '#ffffff',
           font: {
-            family: 'Arial',  
-            size: 14,
+            size: 12,
+            family: 'Arial, sans-serif' // Match website font
           },
-          generateLabels: (chart) => {
-            if (!chart || !chart.data || !Array.isArray(chart.data.labels) || chart.data.labels.length === 0) {
-              return [];
-            }
-            
-            const labels = chart.data.labels;
-            const datasets = chart.data.datasets;
-
-            return labels.map((label, index) => {
-              const count = datasets[0].data[index];
-              return {
-                text: `${label}  ${count}`,
-                fillStyle: datasets[0].backgroundColor[index],
-                strokeStyle: "#ffffff",
-                lineWidth: 2,
-                fontColor: "#ffffff"
-              };
-            });
-          },
-        },
-        borderWidth:1
+          padding: 15,
+        }
       },
-      title: {
-        display: true,
-        text: " "
+      tooltip: {
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        titleColor: '#ffffff',
+        bodyColor: '#ffffff',
+        bodyFont: {
+          family: 'Arial, sans-serif'
+        },
+        titleFont: {
+          family: 'Arial, sans-serif'
+        },
+        padding: 12,
+        displayColors: true,
+        borderColor: 'rgba(255, 255, 255, 0.2)',
+        borderWidth: 1
+      }
+    },
+    elements: {
+      arc: {
+        borderWidth: 2,
+        borderColor: '#2C3E50', // Match website background
+        hoverBorderColor: '#ffffff'
+      }
+    },
+    layout: {
+      padding: {
+        top: 10,
+        bottom: 10,
+        left: 10,
+        right: 10
       }
     }
   };
 
-  const renderChart = () => {
-    if (!chartInstance && chartData) {
-      try {
-        chartInstance = new ChartJS(document.getElementById('doughnut-chart'), {
-          type: 'doughnut',
-          data: chartData,
-          options: options
-        });
-      } catch (error) {
-        console.error("Error rendering chart:", error);
-      }
-    }
+  const getChartColors = (count) => {
+    const baseColors = [
+      'hsl(210, 29%, 29%)',  // Darker shade
+      'hsl(210, 29%, 39%)',  // Base color
+      'hsl(210, 29%, 49%)',  // Lighter shade
+      'hsl(210, 29%, 59%)',  // Even lighter
+      'hsl(210, 29%, 69%)'   // Lightest
+    ];
+    
+    return Array(count).fill().map((_, i) => 
+      baseColors[i] || `hsl(210, ${29 + (i * 5)}%, ${29 + (i * 10)}%)`
+    );
   };
-
-  useEffect(renderChart, [chartData]);
 
   return (
-    <div>
+    <div style={{ width: '100%', height: '300px' }}>
       {chartData ? (
-        <div style={{ width: '400px', height: '300px' }}>
-          <canvas id="doughnut-chart"></canvas>
-        </div>
+        <Doughnut data={chartData} options={options} />
       ) : (
-        <div>Loading...</div>
+        <div style={{ color: '#ffffff', textAlign: 'center', paddingTop: '120px' }}>
+          Loading inventory data...
+        </div>
       )}
     </div>
   );
 };
 
 export default DoughnutChart;
-
-/*
-
-import React, { useState, useEffect } from 'react';
-import { Doughnut } from "react-chartjs-2";
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    ArcElement,
-    Tooltip,
-    Legend
-} from 'chart.js';
-
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    ArcElement,
-    Tooltip,
-    Legend
-);
-
- const DoughnutChart = () => {
-    const [chartData, setChartData] = useState(null);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch("http://localhost:5000/api/items");
-                const items = await response.json();
-    
-                
-                const labels = items.map(item => item.category);
-                const data = items.map(item => item.quantity);
-
-                setChartData({
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: "Current Stock",
-                            data: data,
-                            borderWidth: 4,
-                        }
-                    ]
-                });
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        };
-        fetchData();
-    }, []);
-    const options = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                position: "right",
-                labels:{
-                    font: {
-                        family: 'Arial',  
-                        size: 14,
-                    },
-                    generateLabels: (chart) => {
-                        const labels = chart.data.labels;
-                        const datasets = chart.data.datasets;
-    
-                        return labels.map((label, index) => {
-                            const count = datasets[0].data[index];
-                            return {
-                                text: `${label}  ${count}`,
-                                fillStyle: datasets[0].backgroundColor[index],
-                                strokeStyle: "#ffffff",
-                                lineWidth: 2,
-                                fontColor: "#ffffff"
-                            };
-                        });
-                    },
-                },
-                borderWidth:1
-            },
-            title: {
-                display: true,
-                text: " "
-            }
-        }
-    };
-
-    return chartData ? (
-        <div style={{ width: '400px', height: '300px' }}>
-            <Doughnut options={options} data={chartData} />
-        </div>
-    ) : (
-        <div>
-            Error Loading Data....
-        </div>
-    );
-};
-
-export default DoughnutChart;
-
-*/

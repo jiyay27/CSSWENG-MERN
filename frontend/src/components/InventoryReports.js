@@ -1,102 +1,127 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Sidebar from './Sidebar';
+import Table from 'react-bootstrap/Table';
 import { Bar } from 'react-chartjs-2';
 import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Title,
-    Tooltip,
-    Legend
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
 } from 'chart.js';
 import '../styles/reports.css';
 
 ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Title,
-    Tooltip,
-    Legend
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
 );
 
 const InventoryReports = () => {
-    const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
-    const toggleSidebar = () => setSidebarCollapsed(!isSidebarCollapsed);
+  const [inventoryData, setInventoryData] = useState([]);
 
-    const inventoryData = [
-        { id: 1, itemName: 'Router A', stockLevel: 20, reorderLevel: 10, status: 'In Stock', date: '2024-10-01' },
-        { id: 2, itemName: 'Switch B', stockLevel: 5, reorderLevel: 20, status: 'Low Stock', date: '2024-10-02' }
-    ];
-
-    const barData = {
-        labels: inventoryData.map(item => item.itemName),
-        datasets: [
-            {
-                label: 'Stock Level',
-                data: inventoryData.map(item => item.stockLevel),
-                backgroundColor: 'rgba(54, 162, 235, 0.6)'
-            }
-        ]
+  useEffect(() => {
+    const fetchInventoryData = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/items');
+        setInventoryData(response.data);
+      } catch (error) {
+        console.error('Error fetching inventory data:', error);
+      }
     };
 
-    const barOptions = {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'top'
-            },
-            title: {
-                display: true,
-                text: 'Inventory Stock Levels'
-            }
-        }
-    };
+    fetchInventoryData();
+  }, []);
 
-    return (
-        <div className="container">
-            <Sidebar isSidebarCollapsed={isSidebarCollapsed} toggleSidebar={toggleSidebar} />
-            <div className="main-content">
-                <header>
-                    <div className="header-content">
-                        <input type="text" placeholder="Search inventory reports..." />
-                        <div className="user-profile">
-                            <span className="emoji">😊</span>
-                            <span>Username</span>
-                        </div>
-                    </div>
-                </header>
-                <div className="reports">
-                    <h2>Inventory Reports</h2>
-                    <div className="report-card">
-                        <h3>Reorder Alerts</h3>
-                        <ul>
-                            {inventoryData.map(item => (
-                                item.stockLevel < item.reorderLevel && (
-                                    <li key={item.id}>{item.itemName} - Only {item.stockLevel} left</li>
-                                )
-                            ))}
-                        </ul>
-                    </div>
-                    <div className="report-card">
-                        <h3>Stock Status</h3>
-                        <ul>
-                            {inventoryData.map(item => (
-                                <li key={item.id}>
-                                    {item.itemName}: {item.status}
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                    <div className="report-card">
-                        <h3>Stock Levels Graph</h3>
-                        <Bar data={barData} options={barOptions} />
-                    </div>
-                </div>
+  const barData = {
+    labels: inventoryData.map(item => item.itemName),
+    datasets: [
+      {
+        label: 'Quantity',
+        data: inventoryData.map(item => item.quantity),
+        backgroundColor: 'rgba(54, 162, 235, 0.6)'
+      }
+    ]
+  };
+
+  const barOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top'
+      },
+      title: {
+        display: true,
+        text: 'Inventory Stock Levels'
+      }
+    }
+  };
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'In Stock':
+        return 'green';
+      case 'Low Stock':
+        return 'orange';
+      case 'Out of Stock':
+        return 'red';
+      default:
+        return 'black';
+    }
+  };
+
+  return (
+    <div className="container">
+      <Sidebar />
+      <div className="main-content">
+        <header>
+          <div className="header-content">
+            <input type="text" placeholder="Search inventory reports..." />
+            <div className="user-profile">
+              <span className="emoji">😊</span>
+              <span>Username</span>
             </div>
+          </div>
+        </header>
+        <div className="reports">
+          <h2>Inventory Reports</h2>
+          <div className="report-card">
+            <h3>Stock Levels</h3>
+            <Table striped bordered hover>
+              <thead>
+                <tr>
+                  <th>Item Name</th>
+                  <th>Quantity</th>
+                  <th>Status</th>
+                  <th>Reorder Level</th>
+                </tr>
+              </thead>
+              <tbody>
+                {inventoryData.map((item) => (
+                  <tr key={item._id}>
+                    <td>{item.itemName}</td>
+                    <td>{item.quantity}</td>
+                    <td style={{ color: getStatusColor(item.status) }}>{item.status}</td>
+                    <td>{item.reorderLevel}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </div>
+          <div className="report-card" style={{ marginTop: '2rem' }}>
+            <h3>Stock Levels Graph</h3>
+            <Bar data={barData} options={barOptions} />
+          </div>
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default InventoryReports;

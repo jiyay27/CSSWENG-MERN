@@ -58,6 +58,7 @@ body, html {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
+    border: 1px solid #ddd; /* Add border to the table */
 }
 
 .reports table thead {
@@ -67,14 +68,109 @@ body, html {
 .reports table th,
 .reports table td {
     padding: 15px;
-    border: 1px solid #ddd;
+    border: 1px solid #ddd; /* Add border to table cells */
     text-align: left;
 }
 
 .reports table th {
     font-weight: bold;
+    background-color: #f5f5f5; /* Light background for headers */
 }
 
 .reports table tbody tr:nth-child(even) {
-    background-color: #f2f2f2;
+    background-color: #f9f9f9; /* Light background for even rows */
+}
+
+/* Main content styles */
+.inventory-reports-main-content {
+  margin-left: 250px;
+  padding: 20px;
+  transition: margin-left 0.3s;
+}
+
+/* Header styles */
+.inventory-reports-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.inventory-reports-header-content {
+  display: flex;
+  align-items: center;
+}
+
+.inventory-reports-header-content input {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-right: 20px;
+}
+
+/* User profile styles */
+.inventory-reports-user-profile .emoji {
+  margin-right: 5px;
+}
+
+/* Reports section styles */
+.inventory-reports-reports h2 {
+  margin-top: 0;
+}
+
+.inventory-reports-report-card {
+  background-color: #fff;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Table and list styles */
+.inventory-reports-report-card ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.inventory-reports-report-card li {
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.sidebar {
+  width: 250px;
+  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+  color: white;
+  height: 100vh;
+  position: fixed;
+  padding: 20px 0;
+  transition: width 0.3s ease;
+  overflow-y: auto;
+}
+
+.sidebar.collapsed {
+  width: 60px;
+}
+
+.sidebar.collapsed + .main-content {
+  margin-left: 60px;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 200px;
+  }
+
+  .main-content {
+    margin-left: 200px;
+  }
+
+  .sidebar.collapsed {
+    width: 60px;
+  }
+
+  .main-content {
+    margin-left: 60px;
+  }
 }

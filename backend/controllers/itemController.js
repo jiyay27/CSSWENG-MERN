@@ -119,21 +119,20 @@ const decrementItem = async (req, res) => {
     const { quantity } = req.body;
 
     try {
-        // Check if the item exists before trying to update it
-        const updateItem = await Item.findByIdAndUpdate(
+        const updatedItem = await Item.findByIdAndUpdate(
             id,
-            { $dec: { quantity } },
-            { new: true, runValidators: true } // `runValidators` to ensure schema validation
+            { $inc: { quantity: -quantity } },
+            { new: true, runValidators: true }
         );
 
         if (!updatedItem) {
             return res.status(404).json({ message: 'Item not found' });
         }
 
-        res.status(200).json({ message: 'Item quantity successfully incremented', updateItem });
+        res.status(200).json({ message: 'Item quantity successfully decremented', updatedItem });
     } catch (error) {
-        console.error('Error incrementing item quantity:', error); // Add logging
-        res.status(500).json({ message: 'Error incrementing item quantity', error });
+        console.error('Error decrementing item quantity:', error);
+        res.status(500).json({ message: 'Error decrementing item quantity', error });
     }
 };
 
