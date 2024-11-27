@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Add this import
 import '../styles/login.css';
 import '../styles/forgot-password.css'
 
@@ -6,6 +7,7 @@ const Login = () => {
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false); // Added loading state
     const [success, setSuccess] = useState(false); // Added success state
+    const navigate = useNavigate(); // Add this hook
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -41,41 +43,9 @@ const Login = () => {
         }
     };
 
-    const handleForgotPassword = async () => {
-        setLoading(true);
-        setError(false);
-
-        const email = prompt('Enter your email address:');
-        
-        if (!email) {
-            setLoading(false);
-            setError(true);
-            return;
-        }
-
-        try {
-            // Make a POST request to the backend for password reset
-            const response = await fetch('http://localhost:5000/api/forgot-password', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email }),
-            });
-
-            if (response.ok) {
-                setSuccess(true);
-                console.log('Password reset link sent');
-            } else {
-                setError(true);
-                console.error('Failed to send password reset link');
-            }
-        } catch (err) {
-            setError(true);
-            console.error('Error sending password reset:', err);
-        }
-
-        setLoading(false);
+    const handleForgotPassword = (e) => {
+        e.preventDefault(); // Prevent default behavior
+        navigate('/forgot-password'); // Navigate to forgot password page
     };
 
     return (
@@ -99,7 +69,13 @@ const Login = () => {
                         </button>
                     </form>
 
-                    <a href="#" onClick={handleForgotPassword} className="forgot-password">Forgot Password?</a>
+                    <a 
+                        href="/forgot-password" 
+                        onClick={handleForgotPassword} 
+                        className="forgot-password"
+                    >
+                        Forgot Password?
+                    </a>
                 </div>
                 
             </div>
