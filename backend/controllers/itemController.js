@@ -145,10 +145,35 @@ const filterItems = async (req, res) => {
 
 // Export inventory items to CSV file
 const exportRemoteData = async (req, res) => {
-    const fileName = "inventory_data_" + 1 +".json";
-    const exportType = exportFromJSON.types.csv;
+    const currentDate = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+    
+    try {
+        const fileName = "inventory_data_" + currentDate + ".json";
+        const exportType = exportFromJSON.types.csv;
+
+        const items = await Item.find({});
+
+        const csvData = exportFromJSON({ data: items, type: exportType });
+        const filePath = path.join(__dirname, fileName);
+
+        fs.writeFileSync(filePath, csvData);
+        
+        // response with file download
+        res.download(filePath, fileName, (err) => {
+            if (err) {
+                res.status(500).json({ message: 'Error downloading file', error: err });
+            } else {
+                // Optionally, delete the file after sending it
+                res.status(200).json({ message: 'File download successful'});
+                fs.unlinkSync(filePath);
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Error exporting data', error });
+    }
+    
     
 
 }
 
-module.exports = { addItem, getItems, updateItem, deleteItem, filterItems, incrementItem, decrementItem };
+module.exports = { addItem, getItems, updateItem, deleteItem, filterItems, incrementItem, decrementItem, exportRemoteData };
