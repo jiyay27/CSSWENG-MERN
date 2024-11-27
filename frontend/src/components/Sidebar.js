@@ -12,6 +12,10 @@ const Sidebar = () => {
     const handleMenuToggle = (event) => {
         const parentLi = event.currentTarget.parentElement;
         parentLi.classList.toggle('active');
+    
+        if (isSidebarCollapsed) {
+            setSidebarCollapsed(false);
+        }
     };
 
     return (
@@ -24,16 +28,16 @@ const Sidebar = () => {
             </div>
             <ul className="menu">
                 <li>
-                    <Link to="/dashboard">
+                    <Link to="/dashboard" title="Dashboard">
                         <span className="icon">🏠</span>
                         <span className="text">Dashboard</span>
                     </Link>
                 </li>
                 <li>
-                    <a href="#" className="dropdown-toggle" onClick={handleMenuToggle}>
+                    <a href="#" className="dropdown-toggle" onClick={handleMenuToggle} title="Inventory">
                         <span className="icon">📦</span>
                         <span className="text">Inventory</span>
-                        <span className="arrow">▼</span>
+                        <span className="arrow">▶</span>
                     </a>
                     <ul className="submenu">
                         <Link to="/inventory">View Items</Link>

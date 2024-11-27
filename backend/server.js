@@ -6,6 +6,7 @@ const workoutRoutes = require('./routes/workouts.js');
 const loginRoutes = require('./routes/login.js');  // Import login route
 const orderRoutes = require('./routes/orders');
 const itemRoutes = require('./routes/items');  // Add the item routes
+const categoryRoutes = require('./routes/category');
 
 // express app
 const app = express();
@@ -24,6 +25,8 @@ app.use('/api/workouts', workoutRoutes);
 app.use('/api/login', loginRoutes);  // Add login route
 app.use('/api/orders', orderRoutes);
 app.use('/api/items', itemRoutes);  // Add items route
+app.use('/api/transactions', require('./routes/transaction'));
+app.use('/api/categories', categoryRoutes);
 
 // connect to MongoDB using the connection string in .env
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })

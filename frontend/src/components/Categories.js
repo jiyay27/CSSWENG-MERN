@@ -1,64 +1,60 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import '../styles/categories.css';
+import axios from 'axios';
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
   const [newCategory, setNewCategory] = useState('');
-  const [editingCategory, setEditingCategory] = useState(null);
-  const [categoryStats, setCategoryStats] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState('name'); // 'name', 'items', 'created'
+  const [sortBy, setSortBy] = useState('name');
 
+  // Fetch categories on component mount
   useEffect(() => {
-    // Fetch all categories
-    fetch('/api/categories')
-      .then(response => response.json())
-      .then(data => setCategories(data));
-
-    // Fetch category analytics
-    fetch('/api/categories/analytics')
-      .then(response => response.json())
-      .then(data => setCategoryStats(data));
+    fetchCategories();
   }, []);
 
-  const addCategory = () => {
-    const category = { name: newCategory };
-    fetch('/api/categories', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(category)
-    })
-      .then(response => response.json())
-      .then(data => setCategories([...categories, data]));
-    setNewCategory('');
+  const fetchCategories = async () => {
+      try {
+          const response = await axios.get('http://localhost:5000/api/categories/all');
+          console.log('Response:', response.data); // Add this log
+          if (response.data.categories) {
+              setCategories(response.data.categories);
+          }
+      } catch (error) {
+          console.error('Error fetching categories:', error);
+      }
   };
 
-  const updateCategory = (id, name) => {
-    fetch(`/api/categories/${id}`, {
-      method: 'PUT',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ name })
-    })
-      .then(response => response.json())
-      .then(() => {
-        setCategories(categories.map(cat => (cat.id === id ? { id, name } : cat)));
-        setEditingCategory(null);
-      });
+  const addCategory = async () => {
+      if (!newCategory.trim()) return;
+      
+      try {
+          const response = await axios.post('http://localhost:5000/api/categories/add', {
+              categName: newCategory
+          });
+          console.log('Add category response:', response.data); // Add this log
+          fetchCategories(); // Refresh the list
+          setNewCategory(''); // Clear the input
+      } catch (error) {
+          console.error('Error adding category:', error);
+      }
   };
 
-  const deleteCategory = (id) => {
-    fetch(`/api/categories/${id}`, { method: 'DELETE' })
-      .then(() => setCategories(categories.filter(cat => cat.id !== id)));
+  const deleteCategory = async (id) => {
+    try {
+      await axios.delete(`http://localhost:5000/api/categories/delete/${id}`);
+      fetchCategories(); // Refresh the list
+    } catch (error) {
+      console.error('Error deleting category:', error);
+    }
   };
 
-  // Add search and filter functionality
+  // Filter and sort categories
   const filteredCategories = categories
-    .filter(cat => cat.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    .filter(cat => cat.categName.toLowerCase().includes(searchTerm.toLowerCase()))
     .sort((a, b) => {
-      if (sortBy === 'name') return a.name.localeCompare(b.name);
-      if (sortBy === 'items') return (categoryStats[b.id]?.itemCount || 0) - (categoryStats[a.id]?.itemCount || 0);
-      if (sortBy === 'created') return new Date(b.createdAt) - new Date(a.createdAt);
+      if (sortBy === 'name') return a.categName.localeCompare(b.categName);
       return 0;
     });
 
@@ -99,58 +95,34 @@ const Categories = () => {
               onChange={(e) => setSortBy(e.target.value)}
             >
               <option value="name">Sort by Name</option>
-              <option value="items">Sort by Items</option>
-              <option value="created">Sort by Date Created</option>
             </select>
           </div>
 
-          <div className="category-grid">
-            {filteredCategories.map(cat => (
-              <div key={cat.id} className="category-card">
-                {editingCategory === cat.id ? (
-                  <input
-                    type="text"
-                    defaultValue={cat.name}
-                    onBlur={e => updateCategory(cat.id, e.target.value)}
-                    autoFocus
-                  />
-                ) : (
-                  <>
-                    <h3>{cat.name}</h3>
-                    <div className="category-stats">
-                      <span>🏷️ {categoryStats[cat.id]?.itemCount || '0'} items</span>
-                      <span>📅 Created {new Date(cat.createdAt).toLocaleDateString()}</span>
-                    </div>
-                    <div className="category-actions">
-                      <button onClick={() => setEditingCategory(cat.id)}>✏️ Edit</button>
-                      <button onClick={() => deleteCategory(cat.id)}>🗑️ Delete</button>
-                    </div>
-                  </>
-                )}
-              </div>
-            ))}
-          </div>
-
-          <div className="category-analytics">
-            <h3>Category Analytics</h3>
-            <div className="analytics-grid">
-              <div className="stat-card">
-                <h4>Total Categories</h4>
-                <p>{categories.length}</p>
-              </div>
-              <div className="stat-card">
-                <h4>Most Used Category</h4>
-                <p>Router (23 items)</p>
-              </div>
-              <div className="stat-card">
-                <h4>Recent Activity</h4>
-                <ul>
-                  <li>Added "Wireless" category</li>
-                  <li>Updated "Router" category</li>
-                  <li>Deleted "Old Equipment" category</li>
-                </ul>
-              </div>
-            </div>
+          {/* Categories Table */}
+          <div className="categories-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Category Name</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredCategories.map((category) => (
+                  <tr key={category._id}>
+                    <td>{category.categName}</td>
+                    <td>
+                      <button 
+                        className="delete-btn"
+                        onClick={() => deleteCategory(category._id)}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

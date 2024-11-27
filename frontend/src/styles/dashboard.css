@@ -306,6 +306,24 @@ ul.user-menu li:last-child {
     margin-left: 60px;
 }
 
+.activity-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+}
+
+.activity-type {
+    font-weight: bold;
+    color: #666;
+    margin-right: 10px;
+}
+
+.activity-time {
+    font-size: 0.8em;
+    color: #999;
+}
+
 @media (max-width: 768px) {
     .sidebar {
         width: 200px;

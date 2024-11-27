@@ -1,12 +1,23 @@
 // controllers/itemController.js
 const Item = require('../models/ItemModel');
-const Transaction = require('../models/TransactionModel');
+const Transaction = require('../models/Transaction');
+
+const LOW_STOCK_THRESHOLD = 10;
+const NO_STOCK_THRESHOLD = 0;
 
 // Add a new item
 const addItem = async (req, res) => {
-    const { itemName, category, status, price, description, quantity } = req.body;
+    const { itemName, category, price, description, quantity } = req.body;
 
     try {
+        // Determine initial status based on quantity
+        let status = 'In Stock';
+        if (quantity <= NO_STOCK_THRESHOLD) {
+            status = 'Out of Stock';
+        } else if (quantity <= LOW_STOCK_THRESHOLD) {
+            status = 'Low Stock';
+        }
+
         const newItem = new Item({
             itemName,
             category,
@@ -17,6 +28,16 @@ const addItem = async (req, res) => {
         });
 
         await newItem.save();
+
+        // Create a transaction record
+        const transaction = new Transaction({
+            description: `Added new item: ${itemName}`,
+            type: 'CREATE',
+            itemId: newItem._id,
+            details: { itemName, category, status, price, quantity }
+        });
+        await transaction.save();
+
         res.status(201).json({ message: 'Item added successfully', newItem });
     } catch (error) {
         res.status(500).json({ message: 'Error adding item', error });
@@ -59,6 +80,8 @@ const getItems = async (req, res) => {
 // };
 
 // Update the updateItem function to include automatic status updates
+
+// Update an item
 const updateItem = async (req, res) => {
     const { id } = req.params;
     const { itemName, category, price, description, quantity } = req.body;
@@ -82,57 +105,19 @@ const updateItem = async (req, res) => {
             return res.status(404).json({ message: 'Item not found' });
         }
 
+        // Create a transaction record
+        const transaction = new Transaction({
+            description: `Updated item: ${itemName}`,
+            type: 'UPDATE',
+            itemId: id,
+            details: { itemName, category, status, price, quantity }
+        });
+        await transaction.save();
+
         res.status(200).json({ message: 'Item updated successfully', updatedItem });
     } catch (error) {
         console.error('Error updating item:', error);
         res.status(500).json({ message: 'Error updating item', error });
-    }
-};
-
-// Increment item quantity
-const incrementItem = async (req, res) => {
-    const { id } = req.params;
-    const { quantity } = req.body;
-
-    try {
-        // Check if the item exists before trying to update it
-        const updateItem = await Item.findByIdAndUpdate(
-            id,
-            { $inc: { quantity } },
-            { new: true, runValidators: true } // `runValidators` to ensure schema validation
-        );
-
-        if (!updatedItem) {
-            return res.status(404).json({ message: 'Item not found' });
-        }
-
-        res.status(200).json({ message: 'Item quantity successfully incremented', updateItem });
-    } catch (error) {
-        console.error('Error incrementing item quantity:', error); // Add logging
-        res.status(500).json({ message: 'Error incrementing item quantity', error });
-    }
-};
-
-// Decrement item quantity
-const decrementItem = async (req, res) => {
-    const { id } = req.params;
-    const { quantity } = req.body;
-
-    try {
-        const updatedItem = await Item.findByIdAndUpdate(
-            id,
-            { $inc: { quantity: -quantity } },
-            { new: true, runValidators: true }
-        );
-
-        if (!updatedItem) {
-            return res.status(404).json({ message: 'Item not found' });
-        }
-
-        res.status(200).json({ message: 'Item quantity successfully decremented', updatedItem });
-    } catch (error) {
-        console.error('Error decrementing item quantity:', error);
-        res.status(500).json({ message: 'Error decrementing item quantity', error });
     }
 };
 
@@ -147,64 +132,126 @@ const deleteItem = async (req, res) => {
             return res.status(404).json({ message: 'Item not found' });
         }
 
+        // Create a transaction record
+        const transaction = new Transaction({
+            description: `Deleted item: ${deletedItem.itemName}`,
+            type: 'DELETE',
+            itemId: id,
+            details: { itemName: deletedItem.itemName }
+        });
+        await transaction.save();
+
         res.status(200).json({ message: 'Item deleted successfully' });
     } catch (error) {
         res.status(500).json({ message: 'Error deleting item', error });
     }
 };
 
-// Filter items by category, status, or price range
-const filterItems = async (req, res) => {
-    const { category, status, priceMin, priceMax } = req.body;
+// Increment item quantity
+const incrementItem = async (req, res) => {
+    const { id } = req.params;
+    const incrementAmount = 1;
 
     try {
-        let filters = {};
-        if (category) filters.category = category;
-        if (status) filters.status = status;
-        if (priceMin || priceMax) {
-            filters.price = {};
-            if (priceMin) filters.price.$gte = priceMin;
-            if (priceMax) filters.price.$lte = priceMax;
+        const item = await Item.findById(id);
+        if (!item) {
+            return res.status(404).json({ message: 'Item not found' });
         }
 
-        const filteredItems = await Item.find(filters);
-        res.status(200).json(filteredItems);
+        const newQuantity = item.quantity + incrementAmount;
+        let newStatus = 'In Stock';
+        if (newQuantity <= NO_STOCK_THRESHOLD) {
+            newStatus = 'Out of Stock';
+        } else if (newQuantity <= LOW_STOCK_THRESHOLD) {
+            newStatus = 'Low Stock';
+        }
+
+        const updatedItem = await Item.findByIdAndUpdate(
+            id,
+            { 
+                $inc: { quantity: incrementAmount },
+                status: newStatus
+            },
+            { new: true }
+        );
+
+        // Create a transaction record
+        const transaction = new Transaction({
+            description: `Incremented quantity for: ${item.itemName}`,
+            type: 'UPDATE',
+            itemId: id,
+            details: { itemName: item.itemName, quantity: newQuantity }
+        });
+        await transaction.save();
+
+        res.status(200).json({ 
+            success: true, 
+            message: 'Item quantity successfully incremented',
+            updateItem: updatedItem
+        });
     } catch (error) {
-        res.status(500).json({ message: 'Error filtering items', error });
+        console.error('Error incrementing item quantity:', error);
+        res.status(500).json({ message: 'Error incrementing item quantity', error });
     }
 };
 
-// Export inventory items to CSV file
-const exportRemoteData = async (req, res) => {
-    const currentDate = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
-    
+// Decrement item quantity
+const decrementItem = async (req, res) => {
+    const { id } = req.params;
+    const decrementAmount = 1;
+
     try {
-        const fileName = "inventory_data_" + currentDate + ".json";
-        const exportType = exportFromJSON.types.csv;
+        const item = await Item.findById(id);
+        if (!item) {
+            return res.status(404).json({ message: 'Item not found' });
+        }
 
-        const items = await Item.find({});
+        if (item.quantity <= 0) {
+            return res.status(400).json({ message: 'Cannot decrement. Quantity already at 0.' });
+        }
 
-        const csvData = exportFromJSON({ data: items, type: exportType });
-        const filePath = path.join(__dirname, fileName);
+        const newQuantity = item.quantity - decrementAmount;
+        let newStatus = 'In Stock';
+        if (newQuantity <= NO_STOCK_THRESHOLD) {
+            newStatus = 'Out of Stock';
+        } else if (newQuantity <= LOW_STOCK_THRESHOLD) {
+            newStatus = 'Low Stock';
+        }
 
-        fs.writeFileSync(filePath, csvData);
-        
-        // response with file download
-        res.download(filePath, fileName, (err) => {
-            if (err) {
-                res.status(500).json({ message: 'Error downloading file', error: err });
-            } else {
-                // Optionally, delete the file after sending it
-                res.status(200).json({ message: 'File download successful'});
-                fs.unlinkSync(filePath);
-            }
+        const updatedItem = await Item.findByIdAndUpdate(
+            id,
+            { 
+                $inc: { quantity: -decrementAmount },
+                status: newStatus
+            },
+            { new: true }
+        );
+
+        // Create a transaction record
+        const transaction = new Transaction({
+            description: `Decremented quantity for: ${item.itemName}`,
+            type: 'UPDATE',
+            itemId: id,
+            details: { itemName: item.itemName, quantity: newQuantity }
+        });
+        await transaction.save();
+
+        res.status(200).json({ 
+            success: true,
+            message: 'Item quantity successfully decremented',
+            updateItem: updatedItem
         });
     } catch (error) {
-        res.status(500).json({ message: 'Error exporting data', error });
+        console.error('Error decrementing item quantity:', error);
+        res.status(500).json({ message: 'Error decrementing item quantity', error });
     }
-    
-    
+};
 
-}
-
-module.exports = { addItem, getItems, updateItem, deleteItem, filterItems, incrementItem, decrementItem, exportRemoteData };
+module.exports = { 
+    addItem, 
+    getItems, 
+    updateItem, 
+    deleteItem, 
+    incrementItem, 
+    decrementItem 
+};

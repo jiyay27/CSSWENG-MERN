@@ -10,10 +10,104 @@
     padding: 20px 0;
     transition: width 0.3s ease;
     overflow-y: auto;
+    z-index: 1000;
 }
 
 .sidebar.collapsed {
     width: 60px;
+}
+
+/* Hide arrows when collapsed */
+.sidebar.collapsed .arrow {
+    display: none !important; /* Use !important to override other styles */
+}
+
+/* Tooltip for collapsed state */
+.sidebar.collapsed .menu a {
+    position: relative;
+}
+
+.sidebar.collapsed .menu a:hover::after {
+    content: attr(title);
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+    z-index: 1001;
+    margin-left: 10px;
+}
+
+/* Expand sidebar on dropdown click */
+.sidebar.collapsed .menu li.active {
+    width: 250px;
+    background: var(--secondary-color);
+}
+
+.sidebar.collapsed .menu li.active .submenu {
+    display: block;
+    position: static;
+    width: 100%;
+    max-height: 1000px;
+    background: transparent;
+}
+
+.sidebar.collapsed .menu li.active .text,
+.sidebar.collapsed .menu li.active .arrow {
+    display: inline-block;
+}
+
+.sidebar.collapsed .menu li.active > a {
+    padding-left: 20px;
+    justify-content: flex-start;
+}
+
+.sidebar.collapsed .menu li.active .icon {
+    margin-right: 10px;
+}
+
+/* Change arrow direction when collapsed */
+.sidebar.collapsed .arrow {
+    transform: rotate(-90deg);
+    display: inline-block !important;
+    margin: 0;
+}
+
+/* Remove the previous rule that showed arrows when collapsed */
+.sidebar.collapsed .menu li.active .arrow {
+    display: none !important;
+}
+
+.sidebar.collapsed .submenu {
+    position: absolute;
+    left: 100%;
+    top: 0;
+    width: 200px;
+    background: var(--secondary-color);
+    max-height: none;
+    display: none;
+}
+
+.sidebar.collapsed .menu li:hover > .submenu {
+    display: block;
+}
+
+/* Hide submenu when sidebar is collapsed unless explicitly hovered */
+.sidebar.collapsed .menu li .submenu {
+    display: none;
+}
+
+.sidebar.collapsed .menu li:hover > .submenu {
+    display: block;
+    position: absolute;
+    left: 100%;
+    top: 0;
+    width: 200px;
+    background: var(--secondary-color);
 }
 
 .sidebar::-webkit-scrollbar {
@@ -57,13 +151,18 @@
     position: relative;
 }
 
+/* Reset menu item width when sidebar is collapsed */
+.sidebar.collapsed .menu li {
+    width: 60px;
+}
+
 .menu a {
     display: flex;
     align-items: center;
     padding: 15px 20px;
     color: white;
     text-decoration: none;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .menu a .icon {

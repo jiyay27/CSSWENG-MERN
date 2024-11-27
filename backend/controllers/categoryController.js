@@ -2,22 +2,14 @@ const Category = require('../models/CategoryModel');
 
 // Controller function to handle adding an order
 const addCategory = async (req, res) => {
-    const { itemName, status, price, date, customCategories } = req.body;
+    const { categName } = req.body; // Changed from itemName to categName
 
     try {
-        // Check if any existing category matches the new ones
-        const existingCategories = await Category.find({ categName: { $in: customCategories } });
-        if (existingCategories.length > 0) {
-            return res.status(400).json({ message: 'One or more custom categories already exist' });
-        }
-
         const newCategory = new Category({
-            categName: itemName,
-            customCategories: customCategories
+            categName: categName // Use categName directly
         });
 
         await newCategory.save();
-
         res.status(201).json({ message: 'Category added successfully', newCategory });
     } catch (error) {
         res.status(500).json({ message: 'Error adding category' });
