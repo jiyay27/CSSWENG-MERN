@@ -105,7 +105,6 @@ const decrementItem = async (req, res) => {
     }
 };
 
-
 // Delete an item
 const deleteItem = async (req, res) => {
     const { id } = req.params;
@@ -143,5 +142,13 @@ const filterItems = async (req, res) => {
         res.status(500).json({ message: 'Error filtering items', error });
     }
 };
+
+// Export inventory items to CSV file
+const exportRemoteData = async (req, res) => {
+    const fileName = "inventory_data_" + 1 +".json";
+    const exportType = exportFromJSON.types.csv;
+    
+
+}
 
 module.exports = { addItem, getItems, updateItem, deleteItem, filterItems, incrementItem, decrementItem };
