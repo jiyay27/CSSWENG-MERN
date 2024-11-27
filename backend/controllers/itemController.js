@@ -1,5 +1,6 @@
 // controllers/itemController.js
 const Item = require('../models/ItemModel');
+const Transaction = require('../models/TransactionModel');
 
 // Add a new item
 const addItem = async (req, res) => {
@@ -33,17 +34,48 @@ const getItems = async (req, res) => {
 };
 
 // Update an item
-// controllers/itemController.js
+// // controllers/itemController.js
+// const updateItem = async (req, res) => {
+//     const { id } = req.params;
+//     const { itemName, category, status, price, description, quantity } = req.body;
+
+//     try {
+//         // Check if the item exists before trying to update it
+//         const updatedItem = await Item.findByIdAndUpdate(
+//             id,
+//             { itemName, category, status, price, description, quantity },
+//             { new: true, runValidators: true } // `runValidators` to ensure schema validation
+//         );
+
+//         if (!updatedItem) {
+//             return res.status(404).json({ message: 'Item not found' });
+//         }
+
+//         res.status(200).json({ message: 'Item updated successfully', updatedItem });
+//     } catch (error) {
+//         console.error('Error updating item:', error); // Add logging
+//         res.status(500).json({ message: 'Error updating item', error });
+//     }
+// };
+
+// Update the updateItem function to include automatic status updates
 const updateItem = async (req, res) => {
     const { id } = req.params;
-    const { itemName, category, status, price, description, quantity } = req.body;
+    const { itemName, category, price, description, quantity } = req.body;
 
     try {
-        // Check if the item exists before trying to update it
+        // Determine status based on quantity
+        let status = 'In Stock';
+        if (quantity <= NO_STOCK_THRESHOLD) {
+            status = 'Out of Stock';
+        } else if (quantity <= LOW_STOCK_THRESHOLD) {
+            status = 'Low Stock';
+        }
+
         const updatedItem = await Item.findByIdAndUpdate(
             id,
             { itemName, category, status, price, description, quantity },
-            { new: true, runValidators: true } // `runValidators` to ensure schema validation
+            { new: true, runValidators: true }
         );
 
         if (!updatedItem) {
@@ -52,7 +84,7 @@ const updateItem = async (req, res) => {
 
         res.status(200).json({ message: 'Item updated successfully', updatedItem });
     } catch (error) {
-        console.error('Error updating item:', error); // Add logging
+        console.error('Error updating item:', error);
         res.status(500).json({ message: 'Error updating item', error });
     }
 };
