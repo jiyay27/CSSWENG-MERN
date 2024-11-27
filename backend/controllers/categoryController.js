@@ -41,4 +41,15 @@ const removeCategory = async (req, res) => {
     }
 };
 
-module.exports = { addCategory, removeCategory };
+// Controller function to get all categories
+const getCategories = async (req, res) => {
+    try {
+        // Fetch all categories from the database
+        const categories = await Category.find();
+        res.status(200).json({ message: 'Categories retrieved successfully', categories });
+    } catch (error) {
+        res.status(500).json({ message: 'Error retrieving categories' });
+    }
+};
+
+module.exports = { addCategory, removeCategory, getCategories};
