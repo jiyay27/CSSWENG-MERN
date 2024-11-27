@@ -14,7 +14,15 @@ const Inventory = () => {
         quantity: '',
         description: ''
     });
-    const [editItem, setEditItem] = useState(null); // State for the item being edited
+    const [editItemId, setEditItemId] = useState(null); // State for the item being edited
+    const [editFormData, setEditFormData] = useState({
+        itemName: '',
+        category: '',
+        status: '',
+        price: '',
+        quantity: '',
+        description: ''
+    });
     const [searchTerm, setSearchTerm] = useState('');
     const [filters, setFilters] = useState({
         category: '',
@@ -34,18 +42,17 @@ const Inventory = () => {
 
     // Fetch items from the backend
     useEffect(() => {
-        const fetchItems = async () => {
-            try {
-                const response = await fetch('http://localhost:5000/api/items');
-                const data = await response.json();
-                setItems(data);
-            } catch (error) {
-                console.error('Error fetching items:', error);
-            }
-        };
-
         fetchItems();
     }, []);
+
+    const fetchItems = async () => {
+        try {
+            const response = await axios.get('http://localhost:5000/api/items');
+            setItems(response.data);
+        } catch (error) {
+            console.error('Error fetching items:', error);
+        }
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -103,62 +110,66 @@ const Inventory = () => {
     };
 
     // Delete item
-    const handleDelete = async (id) => {
-        if (!window.confirm("Are you sure you want to delete this item?")) return;
-        
+    const handleDeleteClick = async (itemId) => {
         try {
-            const response = await fetch(`http://localhost:5000/api/items/delete/${id}`, {
-                method: 'DELETE',
-            });
-
-            if (response.ok) {
-                setItems(items.filter(item => item._id !== id));
-                setQuantities(prevQuantities => {
-                    const newQuantities = {...prevQuantities};
-                    delete newQuantities[id];
-                    return newQuantities;
-                });
-            } else {
-                console.error('Error deleting item');
-            }
+            await axios.delete(`http://localhost:5000/api/items/delete/${itemId}`);
+            fetchItems();
         } catch (error) {
             console.error('Error deleting item:', error);
         }
     };
 
     // Edit item (open modal with pre-filled values)
-    const handleEdit = (item) => {
-        setEditItem(item);
+    const handleEditClick = (event, item) => {
+        event.preventDefault();
+        setEditItemId(item._id);
+
+        const formValues = {
+            itemName: item.itemName,
+            category: item.category,
+            status: item.status,
+            price: item.price,
+            quantity: item.quantity,
+            description: item.description
+        };
+
+        setEditFormData(formValues);
     };
 
-    // Save edited item
-    const handleEditSubmit = async (e) => {
-        e.preventDefault();
-        console.log("Submitting edit for item:", editItem);  // Debugging line
+    // Handle input change in edit form
+    const handleEditFormChange = (event) => {
+        event.preventDefault();
+
+        const { name, value } = event.target;
+
+        setEditFormData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };
+
+    // Handle edit form submit
+    const handleEditFormSubmit = async (event) => {
+        event.preventDefault();
+
+        const editedItem = {
+            ...editFormData,
+        };
+
         try {
-            const response = await fetch(`http://localhost:5000/api/items/update/${editItem._id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(editItem),
-            });
-    
-            if (response.ok) {
-                const updatedItem = await response.json();
-                console.log("Item updated successfully:", updatedItem); // Debugging line
-    
-                // Update the state with the newly edited item
-                setItems(items.map(item => item._id === updatedItem.updatedItem._id ? updatedItem.updatedItem : item));
-                setEditItem(null);  // Close edit modal
-            } else {
-                console.error('Error updating item:', await response.json());
-            }
+            await axios.put(`http://localhost:5000/api/items/update/${editItemId}`, editedItem);
+            fetchItems();
+            setEditItemId(null);
         } catch (error) {
             console.error('Error updating item:', error);
         }
     };
-    
+
+    // Cancel editing
+    const handleCancelClick = () => {
+        setEditItemId(null);
+    };
+
     const handleIncrement = async (itemId) => {
         try {
             const response = await axios.patch(`http://localhost:5000/api/items/increment/${itemId}`);
@@ -400,108 +411,126 @@ const Inventory = () => {
                 </div>
 
                 <div className="inventory-table">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Item Name</th>
-                                <th>Category</th>
-                                <th>Status</th>
-                                <th>Price</th>
-                                <th>Quantity</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {filteredItems.map(item => (
-                                <tr key={item._id}>
-                                    <td>{item.itemName}</td>
-                                    <td>{item.category}</td>
-                                    <td>{item.status}</td>
-                                    <td>${item.price}</td>
-                                    <td>
-                                        <button className="increment-btn" onClick={() => handleIncrement(item._id)}>+</button>
-                                        <span>{item.quantity}</span>
-                                        <button className="decrement-btn" onClick={() => handleDecrement(item._id)}>-</button>
-                                        <button className="edit-btn" onClick={() => handleEdit(item)}>Edit</button>
-                                        <button className="delete-btn" onClick={() => handleDelete(item._id)}>Delete</button>
-                                    </td>
+                    <form onSubmit={handleEditFormSubmit}>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Item Name</th>
+                                    <th>Quantity</th>
+                                    <th>Status</th>
+                                    <th>Price</th>
+                                    <th>Category</th>
+                                    <th>Description</th>
+                                    <th>Actions</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+  {items.map((item) =>
+    editItemId === item._id ? (
+      // Edit Mode Row
+      <tr key={item._id}>
+        <td>
+          <input
+            type="text"
+            required
+            name="itemName"
+            value={editFormData.itemName}
+            onChange={handleEditFormChange}
+          />
+        </td>
+        <td>
+          <input
+            type="number"
+            required
+            name="quantity"
+            value={editFormData.quantity}
+            onChange={handleEditFormChange}
+            min="0"
+          />
+        </td>
+        <td>
+          <select
+            name="status"
+            value={editFormData.status}
+            onChange={handleEditFormChange}
+          >
+            <option value="In Stock">In Stock</option>
+            <option value="Low Stock">Low Stock</option>
+            <option value="Out of Stock">Out of Stock</option>
+          </select>
+        </td>
+        <td>
+          <input
+            type="number"
+            required
+            name="price"
+            value={editFormData.price}
+            onChange={handleEditFormChange}
+            min="0"
+            step="0.01"
+          />
+        </td>
+        <td>
+          <input
+            type="text"
+            required
+            name="category"
+            value={editFormData.category}
+            onChange={handleEditFormChange}
+          />
+        </td>
+        <td>
+          <input
+            type="text"
+            required
+            name="description"
+            value={editFormData.description}
+            onChange={handleEditFormChange}
+          />
+        </td>
+        <td>
+          <button type="submit" className="save-btn">
+            Save
+          </button>
+          <button type="button" onClick={handleCancelClick} className="cancel-btn">
+            Cancel
+          </button>
+        </td>
+      </tr>
+    ) : (
+      // Read-Only Mode Row
+      <tr key={item._id}>
+        <td>{item.itemName}</td>
+        <td>
+          <input type="number" value={item.quantity} disabled />
+        </td>
+        <td>{item.status}</td>
+        <td>${item.price.toFixed(2)}</td>
+        <td>{item.category}</td>
+        <td>{item.description}</td>
+        <td>
+          <button
+            type="button"
+            onClick={(event) => handleEditClick(event, item)}
+            className="edit-btn"
+          >
+            Edit
+          </button>
+          <button
+            type="button"
+            onClick={() => handleDeleteClick(item._id)}
+            className="delete-btn"
+          >
+            Delete
+          </button>
+        </td>
+      </tr>
+    )
+  )}
+</tbody>
+                        </table>
+                    </form>
                 </div>
-
-                {/* Edit Modal */}
-                {editItem && (
-                    <div className="edit-modal">
-                        <h2>Edit Item</h2>
-                        <form onSubmit={handleEditSubmit}>
-                            <label htmlFor="itemName">Item Name:</label>
-                            <input
-                                type="text"
-                                name="itemName"
-                                value={editItem.itemName}
-                                onChange={(e) => setEditItem({ ...editItem, itemName: e.target.value })}
-                                required
-                            />
-
-                            <label htmlFor="category">Category:</label>
-                            <select
-                                name="category"
-                                value={editItem.category}
-                                onChange={(e) => setEditItem({ ...editItem, category: e.target.value })}
-                                required
-                            >
-                                <option value="Router">Router</option>
-                                <option value="Access Point">Access Point</option>
-                                <option value="Switch">Switch</option>
-                                <option value="Patch Panel">Patch Panel</option>
-                                <option value="Cloud Key">Cloud Key</option>
-                            </select>
-
-                            <label htmlFor="status">Status:</label>
-                            <select
-                                name="status"
-                                value={editItem.status}
-                                onChange={(e) => setEditItem({ ...editItem, status: e.target.value })}
-                                required
-                            >
-                                <option value="In Stock">In Stock</option>
-                                <option value="Low Stock">Low Stock</option>
-                                <option value="Out of Stock">Out of Stock</option>
-                            </select>
-
-                            <label htmlFor="price">Price:</label>
-                            <input
-                                type="number"
-                                name="price"
-                                value={editItem.price}
-                                onChange={(e) => setEditItem({ ...editItem, price: e.target.value })}
-                                required
-                            />
-
-                            <label htmlFor="quantity">Quantity:</label>
-                            <input
-                                type="number"
-                                name="quantity"
-                                value={editItem.quantity}
-                                onChange={(e) => setEditItem({ ...editItem, quantity: e.target.value })}
-                                required
-                            />
-
-                            <label htmlFor="description">Description:</label>
-                            <textarea
-                                name="description"
-                                rows="4"
-                                value={editItem.description}
-                                onChange={(e) => setEditItem({ ...editItem, description: e.target.value })}
-                            ></textarea>
-
-                            <button type="submit">Save Changes</button>
-                            <button type="button" onClick={() => setEditItem(null)}>Cancel</button>
-
-                        </form>
-                    </div>
-                )}
             </div>
         </div>
     );

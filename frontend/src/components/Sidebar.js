@@ -36,7 +36,6 @@ const Sidebar = () => {
                         <span className="arrow">▼</span>
                     </a>
                     <ul className="submenu">
-                        <li><a href="#" onClick={() => alert('Open Add Item Modal')}>Add Item</a></li>
                         <Link to="/inventory">View Items</Link>
                         <Link to="/categories">Categories</Link>
                     </ul>

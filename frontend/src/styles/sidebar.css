@@ -1,6 +1,92 @@
+@import 'variables.css';
+@import 'reset.css';
+
+.sidebar {
+    width: 250px;
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    color: white;
+    height: 100vh;
+    position: fixed;
+    padding: 20px 0;
+    transition: width 0.3s ease;
+    overflow-y: auto;
+}
+
+.sidebar.collapsed {
+    width: 60px;
+}
+
+.sidebar::-webkit-scrollbar {
+    display: none;
+}
+
+.sidebar {
+    scrollbar-width: none;
+}
+
+.brand {
+    padding: 10px;
+    text-align: center;
+    position: relative;
+}
+
+.logo {
+    max-width: 50%;
+    height: auto;
+    margin-bottom: 10px;
+    transition: max-width 0.3s ease;
+}
+
+.sidebar.collapsed .logo {
+    max-width: 80%;
+}
+
+.hamburger {
+    font-size: 24px;
+    cursor: pointer;
+    display: block;
+    margin: 0 auto;
+}
+
+.menu {
+    list-style: none;
+    padding: 0;
+}
+
+.menu li {
+    position: relative;
+}
+
+.menu a {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    color: white;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.menu a .icon {
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+.menu a .text {
+    display: inline;
+}
+
+.menu a:hover,
+.menu a.active {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
 .arrow {
-    float: right;
-    margin-left: 10px;
+    margin-left: auto;
+    transition: transform 0.3s ease;
+}
+
+.menu li.active .arrow {
+    transform: rotate(90deg);
 }
 
 .submenu {
@@ -9,13 +95,71 @@
     list-style: none;
     padding: 0;
     transition: max-height 0.3s ease-out;
-  }
-  
-  .menu li.active .submenu {
+}
+
+.menu li.active .submenu {
     max-height: 200px;
     transition: max-height 0.3s ease-in;
-  }
+}
 
-.emoji {
-    font-family: 'Segoe UI Emoji', 'Noto Color Emoji', 'Apple Color Emoji', sans-serif;
-}  
+.submenu li {
+    padding-left: 30px;
+}
+
+.submenu a {
+    padding: 10px 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.submenu a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.main-content {
+    margin-left: 250px;
+    padding: 20px;
+    flex: 1;
+    transition: margin-left 0.3s ease;
+}
+
+.sidebar.collapsed .menu a {
+    justify-content: center;
+}
+
+.sidebar.collapsed .menu a .icon {
+    margin-right: 0;
+}
+
+.sidebar.collapsed .menu a .text {
+    display: none;
+}
+
+.sidebar.collapsed .hamburger {
+    display: block;
+}
+
+.sidebar.collapsed .menu a .arrow {
+    display: none;
+}
+
+.sidebar.collapsed + .main-content {
+    margin-left: 60px;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 200px;
+    }
+
+    .main-content {
+        margin-left: 200px;
+    }
+
+    .sidebar.collapsed {
+        width: 60px;
+    }
+
+    .main-content {
+        margin-left: 60px;
+    }
+}

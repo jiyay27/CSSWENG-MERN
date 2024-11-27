@@ -1,6 +1,6 @@
 /* @inventory.css */
 
-@import 'color-constants.css';
+@import 'variables.css';
 
 body {
   font-family: 'Arial', sans-serif;
@@ -153,6 +153,70 @@ header {
   background-color: var(--primary-color);
 }
 
+/* Add Item Card Styles */
+.add-item-card {
+  margin-top: 20px;
+  padding: 30px;
+  background-color: #fff;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.add-item-card h2 {
+  color: var(--primary-color);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.add-item-card label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--text-color);
+}
+
+.add-item-card input,
+.add-item-card select,
+.add-item-card textarea {
+  width: 100%;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+.add-item-card input:focus,
+.add-item-card select:focus,
+.add-item-card textarea:focus {
+  border-color: var(--primary-color);
+  outline: none;
+}
+
+.add-item-card textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.add-item-button {
+  background-color: var(--accent-color);
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.add-item-button:hover {
+  background-color: var(--primary-color);
+}
+
 .add-item-card {
   margin-top: 20px;
   padding: 20px;
@@ -259,6 +323,69 @@ header {
   background-color: var(--accent-color);
 }
 
+.quantity-button {
+  background-color: var(--accent-color);
+  border: none;
+  color: #fff;
+  padding: 5px 10px;
+  margin: 0 2px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.quantity-button:hover {
+  background-color: var(--primary-color);
+}
+
+/* Styles for the table input fields */
+.inventory-table input[type="text"],
+.inventory-table input[type="number"],
+.inventory-table select {
+  width: 100%;
+  padding: 5px;
+  box-sizing: border-box;
+  border: 1px solid var(--primary-color);
+  border-radius: 3px;
+}
+
+.inventory-table input[disabled] {
+  background-color: #f9f9f9;
+  color: #555;
+}
+
+/* Styles for action buttons */
+.edit-btn,
+.save-btn,
+.cancel-btn,
+.delete-btn {
+  background-color: var(--accent-color);
+  color: #fff;
+  border: none;
+  padding: 5px 8px;
+  margin: 2px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.edit-btn:hover,
+.save-btn:hover,
+.cancel-btn:hover,
+.delete-btn:hover {
+  background-color: var(--primary-color);
+}
+
+.cancel-btn {
+  background-color: #6c757d;
+}
+
+.cancel-btn:hover {
+  background-color: #5a6268;
+}
+
 @media (max-width: 768px) {
   .sidebar {
     width: 60px;
@@ -296,5 +423,29 @@ header {
   .add-item-card {
     max-width: none;
     padding: 15px;
+  }
+
+  .inventory-table {
+    font-size: 12px;
+  }
+
+  .edit-btn,
+  .save-btn,
+  .cancel-btn,
+  .delete-btn {
+    padding: 4px 6px;
+    font-size: 12px;
+  }
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .add-item-card {
+    padding: 20px;
+    margin: 10px;
+  }
+
+  .add-item-card h2 {
+    font-size: 1.5em;
   }
 }

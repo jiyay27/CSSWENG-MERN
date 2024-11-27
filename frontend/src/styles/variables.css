@@ -5,6 +5,9 @@
     --background-color: #ffffff;
     --text-color: #17275E;
     --accent-color: #FFC107;
+    --font-family: 'Arial', sans-serif;
+    --border-radius: 8px;
+    --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
 
 #homepage {
