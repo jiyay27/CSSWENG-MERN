@@ -1,4 +1,4 @@
-const Transaction = require('../models/Transaction');
+const Transaction = require('../models/TransactionModel');
 
 // Fetch recent transactions
 const getRecentTransactions = async (req, res) => {
