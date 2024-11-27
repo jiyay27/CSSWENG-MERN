@@ -44,15 +44,18 @@ const ForgotPassword = () => {
         }
 
         try {
-            const response = await fetch('http://localhost:5000/api/reset-password', {
+            console.log('Attempting password reset for:', email);
+            const response = await fetch('http://localhost:5000/api/login/reset-password', { // Updated endpoint
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ email, password }),
             });
-
+            
+            console.log('Response status:', response.status);
             const data = await response.json();
+            console.log('Response data:', data);
 
             if (response.ok) {
                 setSuccess(true);
@@ -64,6 +67,7 @@ const ForgotPassword = () => {
                 setErrorMessage(data.message || 'Failed to reset password');
             }
         } catch (err) {
+            console.error('Reset password error:', err);
             setError(true);
             setErrorMessage('Network error. Please try again.');
         } finally {

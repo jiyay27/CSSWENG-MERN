@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const workoutRoutes = require('./routes/workouts.js');
 const loginRoutes = require('./routes/login.js');  // Import login route
+const loginRoutes = require('./routes/login');
 const orderRoutes = require('./routes/orders');
 const itemRoutes = require('./routes/items');  // Add the item routes
 const categoryRoutes = require('./routes/category');

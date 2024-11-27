@@ -1,7 +1,8 @@
 const express = require('express');
-const { loginUser } = require('../controllers/loginController'); // Import the login handler
+const { loginUser, resetPassword } = require('../controllers/loginController');
 const router = express.Router();
 
 router.post('/', loginUser);
+router.post('/reset-password', resetPassword);
 
 module.exports = router;

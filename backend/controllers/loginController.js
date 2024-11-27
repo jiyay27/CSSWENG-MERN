@@ -27,4 +27,30 @@ const loginUser = async (req, res) => {
     }
 };
 
-module.exports = { loginUser };
+const resetPassword = async (req, res) => {
+    const { email, password } = req.body;
+    
+    if (!email || !password) {
+        return res.status(400).json({ message: 'Email and password are required' });
+    }
+
+    try {
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ message: 'No account found with that email' });
+        }
+
+        user.password = password;
+        await user.save();
+
+        res.status(200).json({ message: 'Password reset successful' });
+    } catch (error) {
+        console.error('Password reset error:', error);
+        res.status(500).json({ message: `Server error: ${error.message}` });
+    }
+};
+
+module.exports = { 
+    loginUser,
+    resetPassword
+};
