@@ -20,7 +20,7 @@ const Login = () => {
 
         try {
             // Make a POST request to the backend for login
-            const response = await fetch('http://localhost:5000/api/login', { // Ensure correct URL
+            const response = await fetch('https://innovasion-enterprise.onrender.com' + '/api/login', { // Ensure correct URL
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

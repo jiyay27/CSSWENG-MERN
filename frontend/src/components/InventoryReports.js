@@ -29,7 +29,7 @@ const InventoryReports = () => {
   useEffect(() => {
     const fetchInventoryData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/items');
+        const response = await axios.get('https://innovasion-enterprise.onrender.com' + '/api/items');
         setInventoryData(response.data);
       } catch (error) {
         console.error('Error fetching inventory data:', error);

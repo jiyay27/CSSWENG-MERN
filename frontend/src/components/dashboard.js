@@ -15,7 +15,7 @@ const Dashboard = () => {
         // Fetch recent activities
         const fetchRecentActivities = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/transactions');
+                const response = await fetch('https://innovasion-enterprise.onrender.com' + '/api/transactions');
                 const data = await response.json();
                 console.log('Received transactions:', data);
                 if (data.transactions) {
@@ -29,7 +29,7 @@ const Dashboard = () => {
         // Fetch inventory stats
         const fetchInventoryStats = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/items');
+                const response = await fetch('https://innovasion-enterprise.onrender.com' + '/api/items');
                 const items = await response.json();
                 
                 // Count total items

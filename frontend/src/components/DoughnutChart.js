@@ -23,7 +23,7 @@ const DoughnutChart = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/items');
+        const response = await fetch('https://innovasion-enterprise.onrender.com' + '/api/items');
         const items = await response.json();
 
         // Group items by category and sum their quantities

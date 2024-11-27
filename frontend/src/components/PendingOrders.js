@@ -11,7 +11,7 @@ const PendingOrders = () => {
     useEffect(() => {
         const fetchPendingOrders = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/orders?status=pending');
+                const response = await fetch('https://innovasion-enterprise.onrender.com' + '/api/orders?status=pending');
                 const data = await response.json();
                 setPendingOrders(data);
                 setLoading(false);
@@ -26,7 +26,7 @@ const PendingOrders = () => {
 
     const handleOrderSubmit = async (newOrder) => {
         try {
-            const response = await fetch('http://localhost:5000/api/orders', {
+            const response = await fetch('https://innovasion-enterprise.onrender.com' + '/api/orders', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',

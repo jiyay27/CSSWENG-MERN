@@ -24,7 +24,7 @@ const AddItem = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/items', formData);
+      await axios.post('https://innovasion-enterprise.onrender.com' + '/api/items', formData);
       setSuccessMessage('Item added successfully!');
       // Optionally, clear the form
       setFormData({

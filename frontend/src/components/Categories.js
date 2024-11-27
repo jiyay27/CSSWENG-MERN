@@ -16,7 +16,7 @@ const Categories = () => {
 
   const fetchCategories = async () => {
       try {
-          const response = await axios.get('http://localhost:5000/api/categories/all');
+          const response = await axios.get('https://innovasion-enterprise.onrender.com' + '/api/categories/all');
           console.log('Response:', response.data); // Add this log
           if (response.data.categories) {
               setCategories(response.data.categories);
@@ -30,7 +30,7 @@ const Categories = () => {
       if (!newCategory.trim()) return;
       
       try {
-          const response = await axios.post('http://localhost:5000/api/categories/add', {
+          const response = await axios.post('https://innovasion-enterprise.onrender.com' + '/api/categories/add', {
               categName: newCategory
           });
           console.log('Add category response:', response.data); // Add this log
@@ -43,7 +43,7 @@ const Categories = () => {
 
   const deleteCategory = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/categories/delete/${id}`);
+      await axios.delete(`https://innovasion-enterprise.onrender.com/api/categories/delete/${id}`);
       fetchCategories(); // Refresh the list
     } catch (error) {
       console.error('Error deleting category:', error);

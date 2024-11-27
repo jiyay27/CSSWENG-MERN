@@ -45,7 +45,7 @@ const ForgotPassword = () => {
 
         try {
             console.log('Attempting password reset for:', email);
-            const response = await fetch('http://localhost:5000/api/login/reset-password', { // Updated endpoint
+            const response = await fetch('https://innovasion-enterprise.onrender.com' + '/api/login/reset-password', { // Updated endpoint
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

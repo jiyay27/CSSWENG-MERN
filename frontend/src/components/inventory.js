@@ -47,7 +47,7 @@ const Inventory = () => {
 
     const fetchItems = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/api/items');
+            const response = await axios.get('https://innovasion-enterprise.onrender.com' + '/api/items');
             setItems(response.data);
         } catch (error) {
             console.error('Error fetching items:', error);
@@ -78,7 +78,7 @@ const Inventory = () => {
         e.preventDefault();
     
         try {
-            const response = await fetch('http://localhost:5000/api/items/add', {
+            const response = await fetch('https://innovasion-enterprise.onrender.com' + '/api/items/add', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -112,7 +112,7 @@ const Inventory = () => {
     // Delete item
     const handleDeleteClick = async (itemId) => {
         try {
-            await axios.delete(`http://localhost:5000/api/items/delete/${itemId}`);
+            await axios.delete(`https://innovasion-enterprise.onrender.com/api/items/delete/${itemId}`);
             fetchItems();
         } catch (error) {
             console.error('Error deleting item:', error);
@@ -157,7 +157,7 @@ const Inventory = () => {
         };
 
         try {
-            await axios.put(`http://localhost:5000/api/items/update/${editItemId}`, editedItem);
+            await axios.put(`https://innovasion-enterprise.onrender.com/api/items/update/${editItemId}`, editedItem);
             fetchItems();
             setEditItemId(null);
         } catch (error) {
@@ -172,7 +172,7 @@ const Inventory = () => {
 
     const handleIncrement = async (itemId) => {
         try {
-            const response = await axios.patch(`http://localhost:5000/api/items/increment/${itemId}`);
+            const response = await axios.patch(`https://innovasion-enterprise.onrender.com/api/items/increment/${itemId}`);
             console.log('Increment response:', response.data); // Log the response for debugging
     
             if (response.data.success) {
@@ -200,7 +200,7 @@ const Inventory = () => {
     
     const handleDecrement = async (itemId) => {
         try {
-            const response = await axios.patch(`http://localhost:5000/api/items/decrement/${itemId}`);
+            const response = await axios.patch(`https://innovasion-enterprise.onrender.com/api/items/decrement/${itemId}`);
             console.log('Decrement response:', response.data); // Log the response for debugging
     
             if (response.data.success) {
@@ -269,7 +269,7 @@ const Inventory = () => {
     const exportToCSV = async () => {
         try {
             // Get all items
-            const response = await axios.get('http://localhost:5000/api/items');
+            const response = await axios.get('https://innovasion-enterprise.onrender.com' + '/api/items');
             const items = response.data;
             
             // Convert items to CSV format

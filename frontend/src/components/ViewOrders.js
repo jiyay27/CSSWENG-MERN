@@ -16,7 +16,7 @@ const ViewOrders = () => {
     useEffect(() => {
         const fetchOrders = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/orders');
+                const response = await fetch('https://innovasion-enterprise.onrender.com' + '/api/orders');
                 const data = await response.json();
                 setOrders(data);
                 setLoading(false);
@@ -31,7 +31,7 @@ const ViewOrders = () => {
 
     const handleOrderSubmit = async (newOrder) => {
         try {
-            const response = await fetch('http://localhost:5000/api/orders', {
+            const response = await fetch('https://innovasion-enterprise.onrender.com' + '/api/orders', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
