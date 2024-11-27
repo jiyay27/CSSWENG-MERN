@@ -1,6 +1,6 @@
 // routes/items.js
 const express = require('express');
-const { addItem, getItems, updateItem, deleteItem, filterItems, incrementItem, decrementItem } = require('../controllers/itemController.js');
+const { addItem, getItems, updateItem, deleteItem, incrementItem, decrementItem } = require('../controllers/itemController.js');
 const router = express.Router();
 
 // Route to add a new item
@@ -16,7 +16,7 @@ router.put('/update/:id', updateItem);
 router.delete('/delete/:id', deleteItem);
 
 // Route to filter items
-router.post('/filter', filterItems);
+//router.post('/filter', filterItems);
 
 // Route to increment item quantity
 router.put('/increment/:id', incrementItem);
