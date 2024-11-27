@@ -17,6 +17,11 @@ const addItem = async (req, res) => {
         });
 
         await newItem.save();
+
+        await Transaction.create({
+            name: itemName,
+            action: "was added.",
+        });
         res.status(201).json({ message: 'Item added successfully', newItem });
     } catch (error) {
         res.status(500).json({ message: 'Error adding item', error });
@@ -119,20 +124,21 @@ const decrementItem = async (req, res) => {
     const { quantity } = req.body;
 
     try {
-        const updatedItem = await Item.findByIdAndUpdate(
+        // Check if the item exists before trying to update it
+        const updateItem = await Item.findByIdAndUpdate(
             id,
-            { $inc: { quantity: -quantity } },
-            { new: true, runValidators: true }
+            { $dec: { quantity } },
+            { new: true, runValidators: true } // `runValidators` to ensure schema validation
         );
 
         if (!updatedItem) {
             return res.status(404).json({ message: 'Item not found' });
         }
 
-        res.status(200).json({ message: 'Item quantity successfully decremented', updatedItem });
+        res.status(200).json({ message: 'Item quantity successfully incremented', updateItem });
     } catch (error) {
-        console.error('Error decrementing item quantity:', error);
-        res.status(500).json({ message: 'Error decrementing item quantity', error });
+        console.error('Error incrementing item quantity:', error); // Add logging
+        res.status(500).json({ message: 'Error incrementing item quantity', error });
     }
 };
 
@@ -146,6 +152,11 @@ const deleteItem = async (req, res) => {
         if (!deletedItem) {
             return res.status(404).json({ message: 'Item not found' });
         }
+
+        await Transaction.create({
+            name: itemName,
+            action: "was removed.",
+        });
 
         res.status(200).json({ message: 'Item deleted successfully' });
     } catch (error) {

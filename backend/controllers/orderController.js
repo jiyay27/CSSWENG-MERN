@@ -8,6 +8,12 @@ const addOrderHandler = async (req, res) => {
     try {
         // Call the addOrder function
         await addOrder(orderID, itemName, status, price, date);
+
+        await Transaction.create({
+            name: itemName,
+            action: "was ordered.",
+        });
+
         res.status(201).json({ message: 'Order added successfully' });
     } catch (error) {
         res.status(500).json({ message: 'Error adding order' });
