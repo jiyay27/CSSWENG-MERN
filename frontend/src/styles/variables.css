@@ -1,14 +1,54 @@
 /* color-constants.css */
 :root {
+    /* Light mode variables */
     --primary-color: #F57909;
     --secondary-color: #FC450C;
     --background-color: #ffffff;
     --text-color: #17275E;
     --accent-color: #FFC107;
+    --card-bg: #ffffff;
+    --border-color: #ddd;
+
+    /* Dark mode variables */
+    --dark-background: #1a1a1a;
+    --dark-card-bg: #2d2d2d;
+    --dark-text: #ffffff;
+    --dark-border: #404040;
     --font-family: 'Arial', sans-serif;
     --border-radius: 8px;
     --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
+    --dark-input-bg: #2d2d2d;
+    --dark-input-text: #ffffff;
+    --dark-input-border: #404040;
+    --dark-input-focus: #505050;
+}
+
+body.dark-mode {
+    --background-color: var(--dark-background);
+    --text-color: var(--dark-text);
+    --card-bg: var(--dark-card-bg);
+    --border-color: var(--dark-border);
+}
+
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+    background-color: var(--dark-input-bg);
+    color: var(--dark-input-text);
+    border-color: var(--dark-input-border);
+}
+
+body.dark-mode input:focus,
+body.dark-mode select:focus,
+body.dark-mode textarea:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 5px rgba(245, 121, 9, 0.5);
+}
+
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
 
 #homepage {
   text-align: center;

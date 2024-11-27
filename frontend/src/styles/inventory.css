@@ -526,3 +526,56 @@ header {
     font-size: 1.5em;
   }
 }
+
+/* Dark mode styles for tables */
+body.dark-mode .inventory-table,
+body.dark-mode .orders-table,
+body.dark-mode .categories-table {
+    background-color: var(--dark-card-bg);
+    color: var(--dark-text);
+}
+
+body.dark-mode .inventory-table th,
+body.dark-mode .orders-table th,
+body.dark-mode .categories-table th {
+    background-color: var(--dark-card-bg);
+    color: var(--dark-text);
+    border-bottom: 1px solid var(--dark-border);
+}
+
+body.dark-mode .inventory-table td,
+body.dark-mode .orders-table td,
+body.dark-mode .categories-table td {
+    border-bottom: 1px solid var(--dark-border);
+}
+
+/* Dark mode styles for cards */
+body.dark-mode .card {
+    background-color: var(--dark-card-bg);
+    color: var(--dark-text);
+    border: 1px solid var(--dark-border);
+}
+
+/* Dark mode styles for inputs */
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+    background-color: var(--dark-card-bg);
+    color: var(--dark-text);
+    border: 1px solid var(--dark-border);
+}
+
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+    color: #888;
+}
+
+/* Dark mode styles for buttons */
+body.dark-mode button {
+    background-color: var(--primary-color);
+    color: var(--dark-text);
+}
+
+body.dark-mode button:hover {
+    background-color: var(--secondary-color);
+}

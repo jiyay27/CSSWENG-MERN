@@ -7,6 +7,11 @@ const Sidebar = () => {
 
     const toggleSidebar = () => {
         setSidebarCollapsed(!isSidebarCollapsed);
+        // Remove 'active' class from all menu items when collapsing
+        if (!isSidebarCollapsed) {
+            const activeItems = document.querySelectorAll('.menu li.active');
+            activeItems.forEach(item => item.classList.remove('active'));
+        }
     };
 
     const handleMenuToggle = (event) => {
@@ -67,7 +72,7 @@ const Sidebar = () => {
                     </ul>
                 </li>
                 <li>
-                    <Link to="/settings">
+                    <Link to="/settings" title="Settings">
                         <span className="icon">⚙️</span>
                         <span className="text">Settings</span>
                     </Link>

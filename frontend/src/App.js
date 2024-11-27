@@ -10,6 +10,7 @@ import InventoryReports from './components/InventoryReports';
 import ViewItems from './components/ViewItems';
 import Categories from './components/Categories';
 import ForgotPassword from './components/ForgotPassword';
+import Settings from './components/Settings';
 
 function App() {
     return (
@@ -18,6 +19,7 @@ function App() {
                 <Route path="/" element={<Login />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/inventory" element={<Inventory />} />
+                <Route path="/settings" element={<Settings />} />
                 <Route path="/categories" element={<Categories />} />
                 <Route path="/orders/view" element={<ViewOrders />} />
                 <Route path="/orders/pending" element={<PendingOrders />} />
