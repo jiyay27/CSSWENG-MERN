@@ -266,6 +266,42 @@ const Inventory = () => {
         });
     };
 
+    const exportToCSV = async () => {
+        try {
+            // Get all items
+            const response = await axios.get('http://localhost:5000/api/items');
+            const items = response.data;
+            
+            // Convert items to CSV format
+            const csvContent = [
+                // CSV Header
+                ['Item Name', 'Category', 'Status', 'Price', 'Quantity', 'Description'].join(','),
+                // CSV Data
+                ...items.map(item => [
+                    item.itemName,
+                    item.category,
+                    item.status,
+                    item.price,
+                    item.quantity,
+                    item.description.replace(/,/g, ';') // Replace commas in description with semicolons
+                ].join(','))
+            ].join('\n');
+    
+            // Create and download the CSV file
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'inventory.csv');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (error) {
+            console.error('Error exporting to CSV:', error);
+        }
+    };
+
     return (
         <div className="container">
             <Sidebar />
@@ -279,10 +315,14 @@ const Inventory = () => {
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
-                        
-                        <button className="add-new-item-button" onClick={toggleAddNew}>
-                          {isAddingNew ? 'Close Form' : 'Add New Item'}
-                        </button>
+                        <div className="button-group">
+                            <button className="add-new-item-button" onClick={toggleAddNew}>
+                                {isAddingNew ? 'Close Form' : 'Add New Item'}
+                            </button>
+                            <button className="export-csv-button" onClick={exportToCSV}>
+                                Export to CSV
+                            </button>
+                        </div>
                     </div>
                 </header>
 

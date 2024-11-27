@@ -463,6 +463,27 @@ header {
   background-color: #5a6268;
 }
 
+.button-group {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.export-csv-button {
+  background-color: #5a8b5d;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 1rem;
+}
+
+.export-csv-button:hover {
+  background-color: #4a7a4d;
+}
+
 @media (max-width: 768px) {
   .sidebar {
     width: 60px;
@@ -512,6 +533,16 @@ header {
   .delete-btn {
     padding: 4px 6px;
     font-size: 12px;
+  }
+
+  .button-group {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .export-csv-button {
+    width: 100%;
+    margin-top: 10px;
   }
 }
 
