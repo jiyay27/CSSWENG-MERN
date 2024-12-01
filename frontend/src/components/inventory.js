@@ -142,10 +142,8 @@ const Inventory = () => {
 
     // Handle input change in edit form
     const handleEditFormChange = (event) => {
-        event.preventDefault();
-
         const { name, value } = event.target;
-
+    
         setEditFormData((prevData) => ({
             ...prevData,
             [name]: value,
@@ -156,10 +154,10 @@ const Inventory = () => {
     const handleEditFormSubmit = async (event) => {
         event.preventDefault();
         const editedItem = { ...editFormData };
-
+    
         try {
             const response = await axios.put(`${config.API_URL}/api/items/update/${editItemId}`, editedItem);
-            
+    
             if (response.data.updatedItem) {
                 // Update the items list
                 setItems(prevItems => 
@@ -167,13 +165,13 @@ const Inventory = () => {
                         item._id === editItemId ? response.data.updatedItem : item
                     )
                 );
-                
+    
                 // Show success message
                 setSuccessMessage('Item updated successfully!');
                 setShowSuccessPopup(true);
                 setTimeout(() => setShowSuccessPopup(false), 3000);
-                
-                // Call handleCancelClick to exit edit mode
+    
+                // Exit edit mode
                 handleCancelClick();
             }
         } catch (error) {
@@ -252,18 +250,16 @@ const Inventory = () => {
         }
     };
     
-
-    // Filter items based on selected filters
     const filteredItems = items.filter(item => {
         const matchesCategory = !filters.category || item.category === filters.category;
         const matchesStatus = !filters.status || item.status === filters.status;
-        const matchesPriceMin = !filters.priceMin || item.price >= parseFloat(filters.priceMin);
-        const matchesPriceMax = !filters.priceMax || item.price <= parseFloat(filters.priceMax);
+        const matchesPriceMin = !filters.priceMin || item.price >= filters.priceMin;
+        const matchesPriceMax = !filters.priceMax || item.price <= filters.priceMax;
         const matchesSearch = !searchTerm || 
             item.itemName.toLowerCase().includes(searchTerm.toLowerCase()) ||
             item.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
             item.description.toLowerCase().includes(searchTerm.toLowerCase());
-
+    
         return matchesCategory && matchesStatus && matchesPriceMin && matchesPriceMax && matchesSearch;
     });
 
@@ -286,10 +282,15 @@ const Inventory = () => {
 
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
-        setFilters({
-            ...filters,
-            [name]: value
-        });
+        // Convert price values to numbers or empty string
+        const numericValue = (name === 'priceMin' || name === 'priceMax') 
+            ? (value === '' ? '' : parseFloat(value))
+            : value;
+    
+        setFilters(prevFilters => ({
+            ...prevFilters,
+            [name]: numericValue
+        }));
     };
 
     const exportToCSV = async () => {
@@ -492,71 +493,71 @@ const Inventory = () => {
         // Edit Mode Row
         <tr key={item._id}>
             <td>
-            <input
-                type="text"
-                required
-                name="itemName"
-                value={editFormData.itemName}
-                onChange={handleEditFormChange}
-            />
+                <input
+                    type="text"
+                    required
+                    name="itemName"
+                    value={editFormData.itemName}
+                    onChange={handleEditFormChange}
+                />
             </td>
             <td>
-            <input
-                type="number"
-                required
-                name="quantity"
-                value={editFormData.quantity}
-                onChange={handleEditFormChange}
-                min="0"
-            />
+                <input
+                    type="number"
+                    required
+                    name="quantity"
+                    value={editFormData.quantity}
+                    onChange={handleEditFormChange}
+                    min="0"
+                />
             </td>
             <td>
-            <select
-                name="status"
-                value={editFormData.status}
-                onChange={handleEditFormChange}
-            >
-                <option value="In Stock">In Stock</option>
-                <option value="Low Stock">Low Stock</option>
-                <option value="Out of Stock">Out of Stock</option>
-            </select>
+                <select
+                    name="status"
+                    value={editFormData.status}
+                    onChange={handleEditFormChange}
+                >
+                    <option value="In Stock">In Stock</option>
+                    <option value="Low Stock">Low Stock</option>
+                    <option value="Out of Stock">Out of Stock</option>
+                </select>
             </td>
             <td>
-            <input
-                type="number"
-                required
-                name="price"
-                value={editFormData.price}
-                onChange={handleEditFormChange}
-                min="0"
-                step="0.01"
-            />
+                <input
+                    type="number"
+                    required
+                    name="price"
+                    value={editFormData.price}
+                    onChange={handleEditFormChange}
+                    min="0"
+                    step="0.01"
+                />
             </td>
             <td>
-            <input
-                type="text"
-                required
-                name="category"
-                value={editFormData.category}
-                onChange={handleEditFormChange}
-            />
+                <input
+                    type="text"
+                    required
+                    name="category"
+                    value={editFormData.category}
+                    onChange={handleEditFormChange}
+                />
             </td>
             <td>
-            <input
-                type="text"
-                required
-                name="description"
-                value={editFormData.description}
-                onChange={handleEditFormChange}
-            />
+                <input
+                    type="text"
+                    required
+                    name="description"
+                    value={editFormData.description}
+                    onChange={handleEditFormChange}
+                />
             </td>
             <td>
-            <button type="submit" className="save-btn">
-                Save
-            </button>
-            <button type="button" onClick={handleCancelClick} className="cancel-btn">
-                Cancel
-            </button>
+                <button type="submit" className="save-btn">
+                    Save
+                </button>
+                <button type="button" onClick={handleCancelClick} className="cancel-btn">
+                    Cancel
+                </button>
             </td>
         </tr>
         ) : (
