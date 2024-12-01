@@ -27,13 +27,8 @@ const Sidebar = () => {
         <nav className={`sidebar ${isSidebarCollapsed ? 'collapsed' : ''}`}>
             <div className="brand">
                 <img 
-                    src="/logo.png" 
-                    alt="Brand Logo" 
+                    src={process.env.PUBLIC_URL + '/innovasian-icon.jpg'}
                     className="logo"
-                    style={{
-                        filter: 'brightness(0) invert(1)', // Makes logo white
-                        WebkitFilter: 'brightness(0) invert(1)'
-                    }}
                 />
                 <div className="hamburger" onClick={toggleSidebar}>
                     &#9776;

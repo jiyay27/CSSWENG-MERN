@@ -35,6 +35,8 @@ const Inventory = () => {
 
     const [isAddingNew, setIsAddingNew] = useState(false);
     const [isCreatingCustomCategory, setIsCreatingCustomCategory] = useState(false);
+    const [successMessage, setSuccessMessage] = useState('');
+    const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
     const [quantities, setQuantities] = useState({});
 
@@ -156,15 +158,24 @@ const Inventory = () => {
         const editedItem = { ...editFormData };
 
         try {
-            // Optimistic update
-            setItems(prevItems => 
-                prevItems.map(item => 
-                    item._id === editItemId ? { ...item, ...editedItem } : item
-                )
-            );
+            const response = await axios.put(`${config.API_URL}/api/items/update/${editItemId}`, editedItem);
             
-            await axios.put(`${config.API_URL}/api/items/update/${editItemId}`, editedItem);
-            setEditItemId(null);
+            if (response.data.updatedItem) {
+                // Update the items list
+                setItems(prevItems => 
+                    prevItems.map(item => 
+                        item._id === editItemId ? response.data.updatedItem : item
+                    )
+                );
+                
+                // Show success message
+                setSuccessMessage('Item updated successfully!');
+                setShowSuccessPopup(true);
+                setTimeout(() => setShowSuccessPopup(false), 3000);
+                
+                // Call handleCancelClick to exit edit mode
+                handleCancelClick();
+            }
         } catch (error) {
             console.error('Error updating item:', error);
             // Rollback on error
@@ -174,8 +185,16 @@ const Inventory = () => {
 
     // Cancel editing
     const handleCancelClick = () => {
-        setEditItemId(null);
-    };
+    setEditItemId(null);
+    setEditFormData({
+        itemName: '',
+        category: '',
+        status: '',
+        price: '',
+        quantity: '',
+        description: ''
+    });
+};
 
     const handleIncrement = async (itemId) => {
         try {
@@ -574,6 +593,11 @@ const Inventory = () => {
                     </form>
                 </div>
             </div>
+            {showSuccessPopup && (
+                <div className="success-popup">
+                    <p>{successMessage}</p>
+                </div>
+            )}
         </div>
     );
 };

@@ -694,3 +694,71 @@ body.dark-mode .confirmation-popup p {
       opacity: 1;
   }
 }
+
+/* Dark mode styles for add item form */
+body.dark-mode .add-item-card {
+    background-color: var(--dark-card-bg);
+    color: var(--dark-text);
+    border: 1px solid var(--dark-border);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .add-item-card h2 {
+    color: var(--dark-text);
+}
+
+body.dark-mode .add-item-card label {
+    color: var(--dark-text) !important;
+}
+
+body.dark-mode .add-item-card input,
+body.dark-mode .add-item-card select,
+body.dark-mode .add-item-card textarea {
+    background-color: var(--dark-input-bg);
+    color: var(--dark-text);
+    border-color: var(--dark-border);
+}
+
+body.dark-mode .add-item-card input:focus,
+body.dark-mode .add-item-card select:focus,
+body.dark-mode .add-item-card textarea:focus {
+    border-color: var(--dark-accent);
+    box-shadow: 0 0 5px rgba(255, 143, 60, 0.2);
+}
+
+body.dark-mode .add-item-card select option {
+    background-color: var(--dark-input-bg);
+    color: var(--dark-text);
+}
+
+body.dark-mode .add-item-card button[type="submit"] {
+    background-color: var(--dark-accent);
+    color: var(--dark-text);
+}
+
+body.dark-mode .add-item-card button[type="submit"]:hover {
+    background-color: var(--dark-secondary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Dark mode styles for edit form */
+body.dark-mode .inventory-table input[type="text"],
+body.dark-mode .inventory-table input[type="number"],
+body.dark-mode .inventory-table select {
+    background-color: var(--dark-input-bg);
+    color: var(--dark-text);
+    border-color: var(--dark-border);
+}
+
+body.dark-mode .inventory-table input[disabled] {
+    background-color: var(--dark-card-bg);
+    color: var(--dark-text);
+    opacity: 0.7;
+}
+
+/* Success popup in dark mode */
+body.dark-mode .success-popup {
+    background-color: var(--dark-success);
+    color: var(--dark-text);
+}
