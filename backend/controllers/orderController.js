@@ -1,4 +1,4 @@
-const { Order, addOrder } = require('../models/OrderModel');
+const { Order } = require('../models/OrderModel');
 const Transaction = require('../models/TransactionModel');
 
 // Controller function to handle adding an order
@@ -30,4 +30,30 @@ const getOrders = async (req, res) => {
     }
 };
 
-module.exports = { addOrderHandler, getOrders };
+const deleteOrder = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const deletedOrder = await Order.findByIdAndDelete(id);
+        
+        if (!deletedOrder) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+
+        // Create transaction record
+        await Transaction.create({
+            name: deletedOrder.itemName,
+            action: "was deleted from orders"
+        });
+
+        res.status(200).json({ message: 'Order deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error deleting order' });
+    }
+};
+
+module.exports = { 
+    addOrderHandler, 
+    getOrders,
+    deleteOrder 
+};

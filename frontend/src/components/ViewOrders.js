@@ -46,6 +46,21 @@ const ViewOrders = () => {
     }
     };
 
+    const handleOrderDelete = async (orderId) => {
+        try {
+            const response = await fetch(`${config.API_URL}/api/orders/delete/${orderId}`, {
+                method: 'DELETE'
+            });
+            
+            if (response.ok) {
+                // Remove the deleted order from state
+                setOrders(orders.filter(order => order._id !== orderId));
+            }
+        } catch (error) {
+            console.error('Error deleting order:', error);
+        }
+    };
+
     return (
         <div className="container">
             <Sidebar />
@@ -60,7 +75,7 @@ const ViewOrders = () => {
                     ) : (
                         <>
                             <OrderForm onSubmit={handleOrderSubmit} />
-                            <OrderTable orders={orders} />
+                            <OrderTable orders={orders} onDelete={handleOrderDelete} />
                             {/* Pagination buttons */}
                         </>
                     )}

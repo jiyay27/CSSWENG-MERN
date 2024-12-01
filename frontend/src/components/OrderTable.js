@@ -1,7 +1,26 @@
-// src/components/OrderTable.js
 import React from 'react';
+import config from '../config';
 
-const OrderTable = ({ orders }) => {
+const OrderTable = ({ orders, onDelete }) => {
+  const handleDelete = async (orderId) => {
+    try {
+      const response = await fetch(`${config.API_URL}/api/orders/delete/${orderId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        onDelete(orderId); // Call parent's delete handler to update UI
+      } else {
+        console.error('Failed to delete order');
+      }
+    } catch (error) {
+      console.error('Error deleting order:', error);
+    }
+  };
+
   return (
     <table>
       <thead>
@@ -17,16 +36,17 @@ const OrderTable = ({ orders }) => {
       <tbody>
         {orders.map(order => (
           <tr key={order._id}>
-            <td>{order._id}</td>
+            <td>{order.orderID}</td>
             <td>{order.itemName}</td>
             <td>{order.status}</td>
             <td>${order.price}</td>
             <td>{new Date(order.date).toLocaleDateString()}</td>
             <td>
-              <button type="button" className="edit-btn">
-                Edit
-              </button>
-              <button type="button" className="delete-btn">
+              <button 
+                type="button" 
+                className="delete-btn"
+                onClick={() => handleDelete(order._id)}
+              >
                 Delete
               </button>
             </td>
