@@ -33,7 +33,7 @@ const Login = () => {
 
             if (response.ok && data.success) {
                 setSuccess(true); // Show success message
-                window.location.href = '/dashboard'; // Redirect on success
+                navigate('/dashboard'); // Redirect on success
             } else {
                 setError(true); // Show error if login fails
             }
