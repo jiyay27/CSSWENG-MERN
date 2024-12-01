@@ -26,7 +26,15 @@ const Sidebar = () => {
     return (
         <nav className={`sidebar ${isSidebarCollapsed ? 'collapsed' : ''}`}>
             <div className="brand">
-                <img src="/logo.jpg" alt="Brand Logo" className="logo" />
+                <img 
+                    src="/logo.png" 
+                    alt="Brand Logo" 
+                    className="logo"
+                    style={{
+                        filter: 'brightness(0) invert(1)', // Makes logo white
+                        WebkitFilter: 'brightness(0) invert(1)'
+                    }}
+                />
                 <div className="hamburger" onClick={toggleSidebar}>
                     &#9776;
                 </div>
@@ -82,6 +90,12 @@ const Sidebar = () => {
                         <span className="icon">❓</span>
                         <span className="text">Help/Support</span>
                     </a>
+                </li>
+                <li className="logout-item">
+                    <Link to="/" title="Logout">
+                        <span className="icon">🚪</span>
+                        <span className="text">Logout</span>
+                    </Link>
                 </li>
             </ul>
         </nav>

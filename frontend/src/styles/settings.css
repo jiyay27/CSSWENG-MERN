@@ -13,34 +13,82 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 20px;
-    background-color: var(--secondary-color);
+    padding: 15px 25px;
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
     color: white;
-    margin-bottom: 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .settings-content {
     background-color: white;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.settings-section {
+    margin-bottom: 30px;
+}
+
+.settings-section h3 {
+    color: var(--secondary-color);
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border-color);
 }
 
 .setting-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border-color);
 }
 
-.setting-item label {
-    font-size: 1.2em;
+.setting-item:last-child {
+    border-bottom: none;
 }
 
-.setting-item input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
+.setting-label {
+    font-size: 1.1em;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.setting-description {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 5px;
+}
+
+.setting-control {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Currency selector styling */
+.currency-select {
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 1em;
+    color: var(--text-color);
+    background-color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.currency-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 5px rgba(245, 121, 9, 0.2);
+    outline: none;
 }
 
 body.dark-mode .container{
@@ -49,22 +97,24 @@ body.dark-mode .container{
 }
 
 body.dark-mode {
-    background-color: #333;
-    color: #fff;
+    background-color: var(--dark-background);
+    color: var(--dark-text);
 }
 
 body.dark-mode .main-content {
-    background-color: #444;
+    background-color: var(--dark-background);
 }
 
 body.dark-mode .settings-content {
     background-color: var(--dark-card-bg);
     color: var(--dark-text);
+    border: 1px solid var(--dark-border);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 body.dark-mode .header-content {
-    background-color: var(--dark-card-bg);
-    border: 1px solid var(--dark-border);
+    background: linear-gradient(to right, var(--dark-accent), var(--dark-secondary));
+    border: none;
 }
 
 body.dark-mode .setting-item {
@@ -75,6 +125,39 @@ body.dark-mode .setting-item label {
     color: var(--dark-text);
 }
 
+body.dark-mode .setting-item input[type="checkbox"] {
+    accent-color: var(--dark-accent);
+}
+
 body.dark-mode input[type="checkbox"] {
     accent-color: var(--primary-color);
+}
+
+/* Add smooth transitions for dark mode */
+body, .container, .main-content, .settings-content, .header-content {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.dark-mode .sidebar {
+  background: var(--dark-sidebar-bg);
+}
+
+body.dark-mode .settings-section h3 {
+    color: var(--dark-accent);
+    border-bottom-color: var(--dark-border);
+}
+
+body.dark-mode .setting-description {
+    color: #999;
+}
+
+body.dark-mode .currency-select {
+    background-color: var(--dark-input-bg);
+    color: var(--dark-text);
+    border-color: var(--dark-border);
+}
+
+body.dark-mode .currency-select:focus {
+    border-color: var(--dark-accent);
+    box-shadow: 0 0 5px rgba(255, 143, 60, 0.2);
 }

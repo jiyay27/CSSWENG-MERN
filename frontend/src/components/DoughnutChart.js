@@ -8,6 +8,7 @@ import {
   Tooltip,
   Legend
 } from 'chart.js';
+import config from '../config';
 
 ChartJS.register(
   CategoryScale,
@@ -23,7 +24,7 @@ const DoughnutChart = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('https://innovasion-enterprise.onrender.com' + '/api/items');
+        const response = await fetch(`${config.API_URL}/api/items`);
         const items = await response.json();
 
         // Group items by category and sum their quantities

@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/forgot-password.css';
+import config from '../config';
 
 const ForgotPassword = () => {
     const [error, setError] = useState(false);
@@ -45,7 +46,7 @@ const ForgotPassword = () => {
 
         try {
             console.log('Attempting password reset for:', email);
-            const response = await fetch('https://innovasion-enterprise.onrender.com' + '/api/login/reset-password', { // Updated endpoint
+            const response = await fetch(`${config.API_URL}/api/login/reset-password`, { // Updated endpoint
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

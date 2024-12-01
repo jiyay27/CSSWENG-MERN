@@ -3,6 +3,7 @@ import '../styles/orders.css';
 import Sidebar from './Sidebar';
 import OrderTable from './OrderTable';
 import OrderForm from './OrderForm';
+import config from '../config';
 
 const ViewOrders = () => {
     const [orders, setOrders] = useState([]);
@@ -16,7 +17,7 @@ const ViewOrders = () => {
     useEffect(() => {
         const fetchOrders = async () => {
             try {
-                const response = await fetch('https://innovasion-enterprise.onrender.com' + '/api/orders');
+                const response = await fetch(`${config.API_URL}/api/orders`);
                 const data = await response.json();
                 setOrders(data);
                 setLoading(false);
@@ -31,7 +32,7 @@ const ViewOrders = () => {
 
     const handleOrderSubmit = async (newOrder) => {
         try {
-            const response = await fetch('https://innovasion-enterprise.onrender.com' + '/api/orders', {
+            const response = await fetch(`${config.API_URL}/api/orders`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',

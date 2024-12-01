@@ -9,3 +9,21 @@ body {
     background-color: var(--background-color);
     color: var(--text-color);
 }
+
+/* Remove any default margins/borders */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Ensure no overflow on the body */
+body {
+    overflow-x: hidden;
+    width: 100%;
+}
+
+/* Reset header positioning */
+header {
+    border-top: none !important;
+}

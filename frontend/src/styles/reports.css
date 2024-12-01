@@ -41,44 +41,42 @@ body, html {
     margin-right: 5px;
 }
 
-/* Reports Section */
+/* Reports Section Styling */
 .reports {
-    background-color: white;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .reports h2 {
-    margin-top: 0;
-    color: #2c3e50;
+    margin: 0 0 30px 0;
+    font-size: 24px;
+    font-weight: 600;
+    text-align: center;
+    color: var(--text-color);
 }
 
+/* Table Styling */
 .reports table {
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    border: 1px solid #ddd; /* Add border to the table */
-}
-
-.reports table thead {
-    background-color: #ecf0f1;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 20px 0;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 .reports table th,
 .reports table td {
-    padding: 15px;
-    border: 1px solid #ddd; /* Add border to table cells */
-    text-align: left;
+    padding: 15px 20px;
+    text-align: center;
 }
 
 .reports table th {
-    font-weight: bold;
-    background-color: #f5f5f5; /* Light background for headers */
-}
-
-.reports table tbody tr:nth-child(even) {
-    background-color: #f9f9f9; /* Light background for even rows */
+    background-color: var(--secondary-color);
+    color: white;
+    font-weight: 500;
+    border: none;
 }
 
 /* Main content styles */
@@ -231,7 +229,6 @@ body.dark-mode button:hover {
 /* Dark mode styles for reports */
 body.dark-mode .reports {
     background-color: var(--dark-card-bg);
-    color: var(--dark-text);
 }
 
 body.dark-mode .report-card {
@@ -254,6 +251,63 @@ body.dark-mode .reports table td {
 
 body.dark-mode .reports table tbody tr:nth-child(even) {
     background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Dark Mode Enhancements */
+body.dark-mode .reports {
+    background-color: var(--dark-card-bg);
+}
+
+body.dark-mode .reports h2 {
+    color: var(--dark-text);
+}
+
+body.dark-mode .reports table {
+    background-color: var(--dark-card-bg);
+    border: 1px solid var(--dark-border);
+}
+
+body.dark-mode .reports table th {
+    background-color: var(--dark-secondary);
+    color: white;
+}
+
+body.dark-mode .reports table td {
+    color: var(--dark-text);
+    border-bottom: 1px solid var(--dark-border);
+}
+
+body.dark-mode .reports table tbody tr:hover {
+    background-color: var(--dark-hover);
+}
+
+/* Report Card Styling */
+.report-card {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.report-card h3 {
+    margin: 0 0 20px 0;
+    font-size: 20px;
+    font-weight: 500;
+    text-align: center;
+    color: var(--text-color);
+}
+
+/* Remove username indicator */
+.user-profile {
+    display: none !important;
+}
+
+/* Chart container styling */
+.report-card canvas {
+    margin-top: 20px;
+    border-radius: 8px;
+    padding: 15px;
 }
 
 /* Dark mode chart styles */

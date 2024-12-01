@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import '../styles/inventory.css';
+import config from '../config';
 
 const AddItem = () => {
   const [formData, setFormData] = useState({
@@ -24,17 +25,27 @@ const AddItem = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('https://innovasion-enterprise.onrender.com' + '/api/items', formData);
-      setSuccessMessage('Item added successfully!');
-      // Optionally, clear the form
-      setFormData({
-        itemName: '',
-        category: '',
-        status: 'In Stock',
-        price: '',
-        quantity: '',
-        description: '',
+      const response = await fetch(`${config.API_URL}/api/items/add`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       });
+      if (response.ok) {
+        setSuccessMessage('Item added successfully!');
+        // Optionally, clear the form
+        setFormData({
+          itemName: '',
+          category: '',
+          status: 'In Stock',
+          price: '',
+          quantity: '',
+          description: '',
+        });
+      } else {
+        console.error('Error adding item:', response.statusText);
+      }
     } catch (error) {
       console.error('Error adding item:', error);
     }

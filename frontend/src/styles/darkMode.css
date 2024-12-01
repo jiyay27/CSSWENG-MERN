@@ -1,0 +1,212 @@
+/* Global dark mode transitions */
+* {
+  transition: background-color 0.3s ease,
+              color 0.3s ease,
+              border-color 0.3s ease,
+              box-shadow 0.3s ease;
+}
+
+/* Dark mode global styles */
+body.dark-mode {
+    background-color: var(--dark-background);
+    color: var(--dark-text);
+    min-height: 100vh;
+}
+
+/* Inputs and form elements */
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+    background-color: var(--dark-input-bg);
+    color: var(--dark-input-text);
+    border-color: var(--dark-border);
+}
+
+/* Input styling in dark mode */
+body.dark-mode input[type="text"],
+body.dark-mode input[type="search"],
+body.dark-mode input[type="number"],
+body.dark-mode select {
+    background-color: var(--dark-input-bg);
+    color: var(--dark-text);
+    border-color: var(--dark-border);
+}
+
+body.dark-mode input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Buttons with variety */
+body.dark-mode .primary-button {
+    background-color: var(--dark-accent);
+    color: var(--dark-text);
+}
+
+body.dark-mode .secondary-button {
+    background-color: var(--dark-secondary);
+    color: var(--dark-text);
+}
+
+body.dark-mode .success-button {
+    background-color: var(--dark-success);
+    color: var(--dark-text);
+}
+
+body.dark-mode .warning-button {
+    background-color: var(--dark-warning);
+    color: #333;
+}
+
+/* Cards and containers with depth */
+body.dark-mode .card {
+    background-color: var(--dark-card-bg);
+    color: var(--dark-text);
+    border: 1px solid var(--dark-border);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Links */
+body.dark-mode a {
+    color: var(--dark-link);
+}
+
+body.dark-mode a:hover {
+    color: var(--dark-accent);
+}
+
+/* Status indicators */
+body.dark-mode .status-in-stock {
+    color: var(--dark-success);
+}
+
+body.dark-mode .status-low-stock {
+    color: var(--dark-warning);
+}
+
+body.dark-mode .status-out-of-stock {
+    color: var(--dark-error);
+}
+
+/* Tables with better contrast */
+body.dark-mode table {
+    background-color: var(--dark-card-bg);
+    color: var(--dark-text);
+}
+
+body.dark-mode th {
+    background-color: #383838;
+    border-color: var(--dark-border);
+}
+
+body.dark-mode td {
+    border-color: var(--dark-border);
+}
+
+body.dark-mode tr:nth-child(even) {
+    background-color: #333333;
+}
+
+/* Hover effects */
+body.dark-mode .card:hover,
+body.dark-mode button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Charts and data visualization */
+body.dark-mode .chart-container {
+    background-color: var(--dark-card-bg);
+    border: 1px solid var(--dark-border);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Transitions */
+body.dark-mode * {
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Categories page dark mode fixes */
+body.dark-mode .category-page {
+  background-color: var(--dark-background);
+  color: var(--dark-text);
+}
+
+body.dark-mode .category-header {
+  background: linear-gradient(45deg, var(--dark-accent), var(--dark-secondary));
+  color: var(--dark-text);
+}
+
+body.dark-mode .category-header h2 {
+  color: var(--dark-text);
+}
+
+body.dark-mode .category-actions {
+  background-color: var(--dark-card-bg);
+  border-color: var(--dark-border);
+}
+
+body.dark-mode .category-actions input {
+  background-color: var(--dark-input-bg);
+  color: var(--dark-text);
+  border-color: var(--dark-border);
+}
+
+body.dark-mode .categories-table {
+  background-color: var(--dark-card-bg);
+}
+
+/* Settings page dark mode fixes */
+body.dark-mode .settings-content {
+  background-color: var(--dark-card-bg);
+  color: var(--dark-text);
+  border: 1px solid var(--dark-border);
+}
+
+body.dark-mode .setting-item {
+  border-bottom: 1px solid var(--dark-border);
+}
+
+body.dark-mode .setting-item label {
+  color: var(--dark-text);
+}
+
+/* Enhanced transitions for interactive elements */
+.card,
+button,
+input,
+select,
+.header-content,
+.settings-content,
+.category-actions,
+.categories-table {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Smooth hover transitions */
+button:hover,
+.card:hover {
+  transform: translateY(-2px);
+  transition: transform 0.2s ease;
+}
+
+/* Table row hover effects */
+body.dark-mode tr:hover {
+  background-color: var(--dark-hover);
+  transition: background-color 0.2s ease;
+}
+
+/* Search bar specific styling */
+.header-content input[type="text"] {
+    padding: 10px 15px;
+    border-radius: 5px;
+    width: 300px;
+    margin-right: auto;
+    font-size: 14px;
+    border: 1px solid var(--border-color);
+}
+
+body.dark-mode .header-content input[type="text"] {
+    background-color: var(--dark-input-bg);
+    color: var(--dark-text);
+    border-color: var(--dark-border);
+}

@@ -3,6 +3,7 @@ import '../styles/orders.css';
 import Sidebar from './Sidebar';
 import OrderTable from './OrderTable';
 import OrderForm from './OrderForm';
+import config from '../config';
 
 const PendingOrders = () => {
     const [pendingOrders, setPendingOrders] = useState([]);
@@ -11,7 +12,7 @@ const PendingOrders = () => {
     useEffect(() => {
         const fetchPendingOrders = async () => {
             try {
-                const response = await fetch('https://innovasion-enterprise.onrender.com' + '/api/orders?status=pending');
+                const response = await fetch(`${config.API_URL}/api/orders?status=pending`);
                 const data = await response.json();
                 setPendingOrders(data);
                 setLoading(false);
@@ -26,7 +27,7 @@ const PendingOrders = () => {
 
     const handleOrderSubmit = async (newOrder) => {
         try {
-            const response = await fetch('https://innovasion-enterprise.onrender.com' + '/api/orders', {
+            const response = await fetch(`${config.API_URL}/api/orders`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',

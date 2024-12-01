@@ -1,4 +1,5 @@
 import React from 'react';
+import { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './components/login';
 import Dashboard from './components/dashboard';
@@ -7,12 +8,17 @@ import PendingOrders from './components/PendingOrders';
 import ViewOrders from './components/ViewOrders';
 import SalesReports from './components/SalesReports';
 import InventoryReports from './components/InventoryReports';
-import ViewItems from './components/ViewItems';
 import Categories from './components/Categories';
 import ForgotPassword from './components/ForgotPassword';
 import Settings from './components/Settings';
 
 function App() {
+    useEffect(() => {
+        const darkMode = localStorage.getItem('darkMode');
+        if (darkMode === 'true') {
+            document.body.classList.add('dark-mode');
+        }
+    }, []);
     return (
         <Router>
             <Routes>

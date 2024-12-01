@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Add this import
 import '../styles/login.css';
 import '../styles/forgot-password.css'
+import config from '../config';
 
 const Login = () => {
     const [error, setError] = useState(false);
@@ -20,7 +21,7 @@ const Login = () => {
 
         try {
             // Make a POST request to the backend for login
-            const response = await fetch('https://innovasion-enterprise.onrender.com' + '/api/login', { // Ensure correct URL
+            const response = await fetch(`${config.API_URL}/api/login`, { // Ensure correct URL
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

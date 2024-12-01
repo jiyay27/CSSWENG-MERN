@@ -8,9 +8,11 @@
     height: 100vh;
     position: fixed;
     padding: 20px 0;
-    transition: width 0.3s ease;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     overflow-y: auto;
     z-index: 1000;
+    top: 0; /* Ensure it starts from the very top */
+    left: 0; /* Ensure it starts from the very left */
 }
 
 .sidebar.collapsed {
@@ -119,16 +121,18 @@
 }
 
 .brand {
-    padding: 10px;
+    padding: 20px;
     text-align: center;
     position: relative;
+    margin-bottom: 20px;
 }
 
+/* Logo styling */
 .logo {
-    max-width: 50%;
+    max-width: 60%;
     height: auto;
-    margin-bottom: 10px;
-    transition: max-width 0.3s ease;
+    filter: brightness(0) invert(1);
+    transition: all 0.3s ease;
 }
 
 .sidebar.collapsed .logo {
@@ -142,6 +146,7 @@
     margin: 0 auto;
 }
 
+/* Menu and arrow styling */
 .menu {
     list-style: none;
     padding: 0;
@@ -159,15 +164,18 @@
 .menu a {
     display: flex;
     align-items: center;
-    padding: 15px 20px;
+    padding: 12px 20px;
     color: white;
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
 }
 
 .menu a .icon {
-    margin-right: 10px;
-    font-size: 20px;
+    margin-right: 12px;
+    font-size: 18px;
+    width: 20px;
+    text-align: center;
 }
 
 .menu a .text {
@@ -181,10 +189,15 @@
 
 .arrow {
     margin-left: auto;
+    font-size: 12px; /* Smaller arrow size */
     transition: transform 0.3s ease;
+    opacity: 0.8;
+    position: absolute;
+    right: 20px;
 }
 
-.menu li.active .arrow {
+/* Arrow rotation for active state */
+.menu li.active > a .arrow {
     transform: rotate(90deg);
 }
 
@@ -193,7 +206,9 @@
     overflow: hidden;
     list-style: none;
     padding: 0;
-    transition: max-height 0.3s ease-out;
+    transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding-left: 48px; /* Align with parent menu text */
+    background: rgba(0, 0, 0, 0.1);
 }
 
 .menu li.active .submenu {
@@ -221,8 +236,10 @@
     transition: margin-left 0.3s ease;
 }
 
+/* Collapsed state adjustments */
 .sidebar.collapsed .menu a {
     justify-content: center;
+    padding: 12px;
 }
 
 .sidebar.collapsed .menu a .icon {
@@ -238,6 +255,17 @@
 }
 
 .sidebar.collapsed .menu a .arrow {
+    display: none;
+}
+
+.sidebar.collapsed .menu li.active > a {
+    padding-left: 20px;
+    justify-content: flex-start;
+}
+
+.sidebar.collapsed .submenu {
+    padding-left: 0;
+    background: rgba(0, 0, 0, 0.1);
     display: none;
 }
 
@@ -261,4 +289,11 @@
     .main-content {
         margin-left: 60px;
     }
+}
+
+/* Dark mode transitions */
+body.dark-mode .sidebar,
+body.dark-mode .menu a,
+body.dark-mode .submenu {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }

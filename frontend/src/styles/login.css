@@ -4,11 +4,12 @@
 .login-container {
     display: flex;
     height: 100vh;
+    transition: all 0.3s ease;
 }
 
 .branding-section {
     flex: 1;
-    background: linear-gradient(45deg, #F57909, #FC450C, #A01365, #831762);
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
     color: white;
     display: flex;
     justify-content: center;
@@ -23,12 +24,13 @@
 .branding-content h1 {
     font-size: 2.5em;
     margin-bottom: 0.5em;
-    font-family: 'Arial', sans-serif;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .branding-content p {
     font-size: 1.2em;
     line-height: 1.5em;
+    opacity: 0.9;
 }
 
 .form-section {
@@ -36,98 +38,80 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #fff;
+    background-color: var(--background-color);
     padding: 2em;
+    transition: background-color 0.3s ease;
 }
 
 .login-form {
     max-width: 400px;
     width: 100%;
     text-align: center;
+    padding: 2em;
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
 }
 
 .login-form h2 {
-    font-family: 'Arial', sans-serif;
-    color: #A01365;
-    margin-bottom: 1em;
+    color: var(--text-color);
+    margin-bottom: 0.5em;
+    font-size: 2em;
 }
 
 .login-form p {
-    margin-bottom: 1em;
+    color: var(--text-color);
+    margin-bottom: 2em;
+    opacity: 0.8;
 }
 
-.login-form input[type="email"],
-.login-form input[type="password"] {
+.login-form input {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     margin-bottom: 1em;
     border-radius: 8px;
-    border: 1px solid #A01365;
+    border: 1px solid var(--border-color);
     font-size: 1em;
+    transition: all 0.3s ease;
+    background-color: var(--background-color);
+    color: var(--text-color);
 }
 
 .login-form input:focus {
-    border-color: #831762;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(245, 121, 9, 0.2);
     outline: none;
-    box-shadow: 0 0 8px rgba(131, 23, 98, 0.3);
 }
 
 .login-form button {
     width: 100%;
-    background-color: #F57909;
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
     color: white;
     padding: 12px;
     border: none;
     border-radius: 8px;
     font-size: 1em;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
+    margin-top: 1em;
 }
 
 .login-form button:hover {
-    background-color: #FC450C;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .login-form a.forgot-password {
     display: block;
-    margin-top: 1em;
-    color: #3373B0;
+    margin-top: 1.5em;
+    color: var(--primary-color);
     text-decoration: none;
+    transition: color 0.3s ease;
 }
 
 .login-form a.forgot-password:hover {
-    text-decoration: underline;
-}
-
-.error-popup {
-    display: none;
-    position: fixed;
-    top: 20%;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #FFCCCB;
-    padding: 1.5em;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
-}
-
-.error-popup.active {
-    display: block;
-    animation: fadeIn 0.5s ease-out;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-input[type="email"], input[type="password"], button {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-button:focus, input:focus {
-    box-shadow: 0 0 8px rgba(131, 23, 98, 0.5);
+    color: var(--secondary-color);
 }
 
 .error-popup {
@@ -220,4 +204,42 @@ body.dark-mode button {
 
 body.dark-mode button:hover {
     background-color: var(--secondary-color);
+}
+
+/* Dark Mode Styles */
+body.dark-mode .form-section {
+    background-color: var(--dark-background);
+}
+
+body.dark-mode .login-form {
+    background-color: var(--dark-card-bg);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .login-form h2,
+body.dark-mode .login-form p {
+    color: var(--dark-text);
+}
+
+body.dark-mode .login-form input {
+    background-color: var(--dark-input-bg);
+    color: var(--dark-text);
+    border-color: var(--dark-border);
+}
+
+body.dark-mode .login-form input:focus {
+    border-color: var(--dark-accent);
+    box-shadow: 0 0 0 2px rgba(255, 143, 60, 0.2);
+}
+
+body.dark-mode .login-form button {
+    background: linear-gradient(45deg, var(--dark-accent), var(--dark-secondary));
+}
+
+body.dark-mode .login-form a.forgot-password {
+    color: var(--dark-accent);
+}
+
+body.dark-mode .login-form a.forgot-password:hover {
+    color: var(--dark-secondary);
 }

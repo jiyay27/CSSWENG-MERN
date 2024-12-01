@@ -22,14 +22,23 @@ body, html {
 .main-content .header-content {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background-color: var(--secondary-color);
+    color: white;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.main-content .header-content input {
+.main-content .header-content input[type="text"] {
     padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-color);
     border-radius: 5px;
-    margin-right: 20px;
+    font-size: 14px;
+    min-width: 250px;
+    background-color: white;
+    color: var(--text-color);
 }
 
 .main-content .header-content .user-profile {
@@ -41,123 +50,228 @@ body, html {
     margin-right: 5px;
 }
 
+/* Orders Container */
 .orders {
-    background-color: white;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    background-color: var(--card-bg);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
 }
 
 .orders h2 {
-    margin-top: 0;
-    color: #2c3e50;
+    color: var(--text-color);
+    margin-bottom: 30px;
+    font-size: 24px;
+    font-weight: 600;
+    text-align: center;
 }
 
+/* Form Styling */
+.orders form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+    background-color: var(--card-bg);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.orders form input,
+.orders form select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+.orders form input:focus,
+.orders form select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 5px rgba(245, 121, 9, 0.2);
+    outline: none;
+}
+
+.orders form button {
+    padding: 12px 24px;
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    width: auto;
+    justify-self: end;
+}
+
+.orders form button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Table Styling */
 .orders table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     margin-top: 20px;
-}
-
-.orders table thead {
-    background-color: #ecf0f1;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 .orders table th,
 .orders table td {
-    padding: 15px;
-    border: 1px solid #ddd;
+    padding: 15px 20px;
     text-align: left;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .orders table th {
-    font-weight: bold;
+    background-color: var(--secondary-color);
+    color: white;
+    font-weight: 500;
+}
+
+.orders table tr:last-child td {
+    border-bottom: none;
 }
 
 .orders table tbody tr:nth-child(even) {
-    background-color: #f2f2f2;
+    background-color: rgba(0, 0, 0, 0.02);
 }
 
-/* Dark mode styles for tables */
-body.dark-mode .inventory-table,
-body.dark-mode .orders-table,
-body.dark-mode .categories-table {
-    background-color: var(--dark-card-bg);
-    color: var(--dark-text);
+.orders table tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.05);
 }
 
-body.dark-mode .inventory-table th,
-body.dark-mode .orders-table th,
-body.dark-mode .categories-table th {
-    background-color: var(--dark-card-bg);
-    color: var(--dark-text);
-    border-bottom: 1px solid var(--dark-border);
+/* Action Buttons Styling */
+.orders table button {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    margin: 0 4px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
 }
 
-body.dark-mode .inventory-table td,
-body.dark-mode .orders-table td,
-body.dark-mode .categories-table td {
-    border-bottom: 1px solid var(--dark-border);
-}
-
-/* Dark mode styles for cards */
-body.dark-mode .card {
-    background-color: var(--dark-card-bg);
-    color: var(--dark-text);
-    border: 1px solid var(--dark-border);
-}
-
-/* Dark mode styles for inputs */
-body.dark-mode input,
-body.dark-mode select,
-body.dark-mode textarea {
-    background-color: var(--dark-card-bg);
-    color: var(--dark-text);
-    border: 1px solid var(--dark-border);
-}
-
-body.dark-mode input::placeholder,
-body.dark-mode textarea::placeholder {
-    color: #888;
-}
-
-/* Dark mode styles for buttons */
-body.dark-mode button {
+.orders table .edit-btn {
     background-color: var(--primary-color);
-    color: var(--dark-text);
 }
 
-body.dark-mode button:hover {
+.orders table .delete-btn {
+    background-color: #dc3545;
+}
+
+.orders table button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.orders table .edit-btn:hover {
     background-color: var(--secondary-color);
 }
 
-/* Dark mode styles for orders */
+.orders table .delete-btn:hover {
+    background-color: #c82333;
+}
+
+/* Dark Mode Styles */
 body.dark-mode .orders {
     background-color: var(--dark-card-bg);
     color: var(--dark-text);
+    border: 1px solid var(--dark-border);
 }
 
-body.dark-mode .orders table {
-    border-color: var(--dark-border);
-}
-
-body.dark-mode .orders table th {
+body.dark-mode .orders form {
     background-color: var(--dark-card-bg);
-    color: var(--dark-text);
-    border-color: var(--dark-border);
-}
-
-body.dark-mode .orders table td {
-    border-color: var(--dark-border);
-}
-
-body.dark-mode .orders table tbody tr:nth-child(even) {
-    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--dark-border);
 }
 
 body.dark-mode .orders form input,
 body.dark-mode .orders form select {
-    background-color: var(--dark-card-bg);
+    background-color: var(--dark-input-bg);
     color: var(--dark-text);
     border-color: var(--dark-border);
+}
+
+body.dark-mode .orders form input:focus,
+body.dark-mode .orders form select:focus {
+    border-color: var(--dark-accent);
+    box-shadow: 0 0 5px rgba(255, 143, 60, 0.2);
+}
+
+body.dark-mode .orders form button {
+    background: linear-gradient(45deg, var(--dark-accent), var(--dark-secondary));
+}
+
+body.dark-mode .orders table {
+    background-color: var(--dark-card-bg);
+    border-color: var(--dark-border);
+}
+
+body.dark-mode .orders table th {
+    background-color: var(--dark-secondary);
+    color: var(--dark-text);
+    border-bottom: 1px solid var(--dark-border);
+}
+
+body.dark-mode .orders table td {
+    border-color: var(--dark-border);
+    color: var(--dark-text);
+}
+
+body.dark-mode .orders table tbody tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+body.dark-mode .orders table tbody tr:hover {
+    background-color: var(--dark-hover);
+}
+
+/* Dark Mode Button Styles */
+body.dark-mode .orders table button {
+    color: var(--dark-text);
+}
+
+body.dark-mode .orders table .edit-btn {
+    background-color: var(--accent-color);
+}
+
+body.dark-mode .orders table .delete-btn {
+    background-color: #dc3545;
+}
+
+body.dark-mode .orders table button:hover {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .orders form {
+        grid-template-columns: 1fr;
+    }
+
+    .orders form button {
+        justify-self: stretch;
+    }
+
+    .orders table {
+        font-size: 14px;
+    }
+
+    .orders table th,
+    .orders table td {
+        padding: 10px 15px;
+    }
 }

@@ -103,16 +103,6 @@ body {
   transition: margin-left 0.3s ease;
 }
 
-header {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 10px 20px;
-  background-color: var(--secondary-color);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
-}
-
 .header-content {
   display: flex;
   align-items: center;
@@ -127,10 +117,12 @@ header {
 
 .header-content input[type="text"] {
   padding: 10px;
-  border: 1px solid var(--primary-color);
+  border: 1px solid var(--border-color);
   border-radius: 5px;
-  font-size: 16px;
-  transition: all 0.3s ease;
+  font-size: 14px;
+  min-width: 250px;
+  background-color: white;
+  color: var(--text-color);
 }
 
 .header-content input[type="text"]:focus {
@@ -470,7 +462,7 @@ header {
 }
 
 .export-csv-button {
-  background-color: #5a8b5d;
+  background-color: #5a8b5d!important;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -609,4 +601,96 @@ body.dark-mode button {
 
 body.dark-mode button:hover {
     background-color: var(--secondary-color);
+}
+
+/* Popup Styles */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.confirmation-popup {
+  background-color: var(--card-bg);
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  width: 90%;
+  animation: slideIn 0.3s ease-out;
+}
+
+.confirmation-popup h3 {
+  color: var(--text-color);
+  margin-bottom: 15px;
+}
+
+.confirmation-popup p {
+  margin-bottom: 20px;
+  color: var(--text-color);
+}
+
+.popup-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.popup-buttons button {
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.popup-buttons .confirm-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.popup-buttons .confirm-btn:hover {
+  background-color: #c82333;
+}
+
+.success-popup {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: var(--success-color, #28a745);
+  color: white;
+  padding: 15px 25px;
+  border-radius: 4px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: slideIn 0.3s ease-out;
+  z-index: 1000;
+}
+
+/* Dark mode styles */
+body.dark-mode .confirmation-popup {
+  background-color: var(--dark-card-bg);
+}
+
+body.dark-mode .confirmation-popup h3,
+body.dark-mode .confirmation-popup p {
+  color: var(--dark-text);
+}
+
+@keyframes slideIn {
+  from {
+      transform: translateY(-20px);
+      opacity: 0;
+  }
+  to {
+      transform: translateY(0);
+      opacity: 1;
+  }
 }

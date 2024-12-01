@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Sidebar from './Sidebar';
 import '../styles/inventory.css';
+import { formatCurrency } from '../utils/currency';
+import config from '../config';
 
 const Inventory = () => {
     const [items, setItems] = useState([]);  // State to store items
@@ -78,7 +80,7 @@ const Inventory = () => {
         e.preventDefault();
     
         try {
-            const response = await fetch('https://innovasion-enterprise.onrender.com' + '/api/items/add', {
+            const response = await fetch(`${config.API_URL}/api/items/add`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -534,14 +536,13 @@ const Inventory = () => {
             </td>
         </tr>
         ) : (
-        // Read-Only Mode Row
         <tr key={item._id}>
             <td>{item.itemName}</td>
             <td>
             <input type="number" value={item.quantity} disabled />
             </td>
             <td>{item.status}</td>
-            <td>${item.price.toFixed(2)}</td>
+            <td>{formatCurrency(item.price)}</td>
             <td>{item.category}</td>
             <td>{item.description}</td>
             <td>

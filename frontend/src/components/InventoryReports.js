@@ -13,6 +13,7 @@ import {
   Legend
 } from 'chart.js';
 import '../styles/reports.css';
+import config from '../config';
 
 ChartJS.register(
   CategoryScale,
@@ -29,7 +30,7 @@ const InventoryReports = () => {
   useEffect(() => {
     const fetchInventoryData = async () => {
       try {
-        const response = await axios.get('https://innovasion-enterprise.onrender.com' + '/api/items');
+        const response = await axios.get(`${config.API_URL}/api/items`);
         setInventoryData(response.data);
       } catch (error) {
         console.error('Error fetching inventory data:', error);
@@ -54,11 +55,43 @@ const InventoryReports = () => {
     responsive: true,
     plugins: {
       legend: {
-        position: 'top'
+        position: 'top',
+        labels: {
+          color: document.body.classList.contains('dark-mode') ? '#fff' : '#333',
+          font: {
+            size: 12,
+            weight: '500'
+          }
+        }
       },
       title: {
         display: true,
-        text: 'Inventory Stock Levels'
+        text: 'Inventory Stock Levels',
+        color: document.body.classList.contains('dark-mode') ? '#fff' : '#333',
+        font: {
+          size: 16,
+          weight: '600'
+        }
+      }
+    },
+    scales: {
+      y: {
+        grid: {
+          color: document.body.classList.contains('dark-mode') ? 
+            'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+        },
+        ticks: {
+          color: document.body.classList.contains('dark-mode') ? '#fff' : '#333'
+        }
+      },
+      x: {
+        grid: {
+          color: document.body.classList.contains('dark-mode') ? 
+            'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+        },
+        ticks: {
+          color: document.body.classList.contains('dark-mode') ? '#fff' : '#333'
+        }
       }
     }
   };
@@ -99,7 +132,6 @@ const InventoryReports = () => {
                   <th>Item Name</th>
                   <th>Quantity</th>
                   <th>Status</th>
-                  <th>Reorder Level</th>
                 </tr>
               </thead>
               <tbody>
@@ -107,8 +139,12 @@ const InventoryReports = () => {
                   <tr key={item._id}>
                     <td>{item.itemName}</td>
                     <td>{item.quantity}</td>
-                    <td style={{ color: getStatusColor(item.status) }}>{item.status}</td>
-                    <td>{item.reorderLevel}</td>
+                    <td style={{ 
+                      color: getStatusColor(item.status),
+                      fontWeight: '500'
+                    }}>
+                      {item.status}
+                    </td>
                   </tr>
                 ))}
               </tbody>

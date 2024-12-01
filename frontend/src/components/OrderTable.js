@@ -23,8 +23,12 @@ const OrderTable = ({ orders }) => {
             <td>${order.price}</td>
             <td>{new Date(order.date).toLocaleDateString()}</td>
             <td>
-              <button>Edit</button>
-              <button>Delete</button>
+              <button type="button" className="edit-btn">
+                Edit
+              </button>
+              <button type="button" className="delete-btn">
+                Delete
+              </button>
             </td>
           </tr>
         ))}

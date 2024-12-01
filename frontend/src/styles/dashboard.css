@@ -102,59 +102,50 @@ body {
     position: relative;
     width: calc(100% - 250px);
 }
-
-header {
+.main-content header {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    padding: 10px 20px;
-    background-color: var(--secondary-color);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
-    width: calc(100% + 40px);
-    margin-left: -20px;
-    margin-top: -20px;
-    padding-left: 40px;
-    box-sizing: border-box;
+    width: 100%;
+    background: none;
+    box-shadow: none;
 }
 
 .header-content {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
+    padding: 15px 25px;
+    background: none;
+    color: var(--text-color);
 }
 
-.header-content input[type="text"] {
-    padding: 10px;
-    border: 1px solid var(--primary-color);
-    border-radius: 5px;
-    margin-right: 15px;
-    min-width: 200px;
-    width: 30%;
-}
-
+/* User Profile Styling */
 .user-profile {
     display: flex;
     align-items: center;
-    margin-left: auto;
     position: relative;
     cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+    margin-left: auto;
+    z-index: 1000;
+    gap: 10px;
 }
 
 .user-profile .emoji {
-    font-size: 40px;
-    margin-right: 10px;
+    font-size: 24px;
     transition: transform 0.2s ease;
 }
 
-.user-profile .emoji:hover {
+.user-profile:hover .emoji {
     transform: scale(1.1);
 }
 
 .user-profile span {
-    color: white;
+    color: var(--text-color);
 }
 
 .cards {
@@ -235,25 +226,62 @@ header {
     background-color: var(--primary-color);
 }
 
+/* Menu Styling */
+.user-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    min-width: 180px;
+    overflow: hidden;
+    margin-top: 8px;
+    border: 1px solid var(--border-color);
+    z-index: 1001;
+}
+
+.user-menu li {
+    list-style: none;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.user-menu li:last-child {
+    border-bottom: none;
+}
+
+.user-menu a {
+    color: var(--text-color);
+    text-decoration: none;
+    padding: 12px 20px;
+    display: block;
+    transition: all 0.2s ease;
+}
+
+.user-menu a:hover {
+    background-color: var(--background-color);
+    padding-left: 25px;
+}
+
 ul.user-menu {
     list-style: none;
     padding: 0;
     position: absolute;
     right: 0;
     top: calc(100% + 5px);
-    background-color: var(--secondary-color);
+    background-color: var(--card-bg);
     border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     min-width: 180px;
     z-index: 1000;
     animation: fadeIn 0.2s ease-in-out;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-color);
 }
 
 ul.user-menu li {
     width: 100%;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--border-color);
 }
 
 ul.user-menu li:last-child {
@@ -261,7 +289,7 @@ ul.user-menu li:last-child {
 }
 
 .user-menu a {
-    color: #FFFFFF;
+    color: var(--text-color);
     text-decoration: none;
     display: block;
     padding: 12px 20px;
@@ -270,8 +298,7 @@ ul.user-menu li:last-child {
 }
 
 .user-menu li:hover {
-    background-color: var(--primary-color);
-    cursor: pointer;
+    background-color: var(--background-color);
 }
 
 .user-menu a:hover {
@@ -332,14 +359,6 @@ ul.user-menu li:last-child {
     .main-content {
         margin-left: 200px;
         width: calc(100% - 60px);
-    }
-
-    header {
-        padding-left: 20px;
-    }
-
-    .header-content {
-        flex-direction: column;
     }
 
     .cards {
@@ -409,4 +428,26 @@ body.dark-mode button {
 
 body.dark-mode button:hover {
     background-color: var(--secondary-color);
+}
+
+/* Dark mode styles */
+body.dark-mode .user-profile {
+    color: var(--dark-text);
+}
+
+body.dark-mode ul.user-menu {
+    background-color: var(--dark-card-bg);
+    border-color: var(--dark-border);
+}
+
+body.dark-mode .user-menu a {
+    color: var(--dark-text);
+}
+
+body.dark-mode ul.user-menu li {
+    border-color: var(--dark-border);
+}
+
+body.dark-mode .user-menu li:hover {
+    background-color: var(--dark-hover);
 }
