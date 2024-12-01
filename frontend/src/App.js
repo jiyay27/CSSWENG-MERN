@@ -11,6 +11,7 @@ import InventoryReports from './components/InventoryReports';
 import Categories from './components/Categories';
 import ForgotPassword from './components/ForgotPassword';
 import Settings from './components/Settings';
+import ErrorBoundary from './components/ErrorBoundary';
 
 function App() {
     useEffect(() => {
@@ -24,7 +25,14 @@ function App() {
             <Routes>
                 <Route path="/" element={<Login />} />
                 <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/inventory" element={<Inventory />} />
+                <Route 
+                    path="/inventory" 
+                    element={
+                        <ErrorBoundary>
+                            <Inventory />
+                        </ErrorBoundary>
+                    } 
+                />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/categories" element={<Categories />} />
                 <Route path="/orders/view" element={<ViewOrders />} />

@@ -49,8 +49,10 @@ const Inventory = () => {
 
     const fetchItems = async () => {
         try {
-            const response = await axios.get('https://innovasion-enterprise.onrender.com' + '/api/items');
-            setItems(response.data);
+            const response = await axios.get(`${config.API_URL}/api/items`);
+            if (response.data) {
+                setItems(response.data);
+            }
         } catch (error) {
             console.error('Error fetching items:', error);
         }
@@ -78,22 +80,15 @@ const Inventory = () => {
     // Add new item
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
         try {
-            const response = await fetch(`${config.API_URL}/api/items/add`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    ...newItem,
-                    customCategories: addedCustomCategories
-                }),
+            const response = await axios.post(`${config.API_URL}/api/items/add`, {
+                ...newItem,
+                customCategories: addedCustomCategories
             });
 
-            const data = await response.json();
-            if (response.ok) {
-                setItems([...items, data.newItem]);
+            if (response.data.newItem) {
+                // Optimistic update
+                setItems(prevItems => [...prevItems, response.data.newItem]);
                 setNewItem({
                     itemName: '',
                     category: 'Router',
@@ -103,21 +98,26 @@ const Inventory = () => {
                     description: ''
                 });
                 setAddedCustomCategories([]);
-            } else {
-                console.error('Error adding item:', data.message);
+                setIsAddingNew(false);
             }
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Error adding item:', error);
+            // Rollback on error
+            fetchItems();
         }
     };
 
     // Delete item
     const handleDeleteClick = async (itemId) => {
         try {
-            await axios.delete(`https://innovasion-enterprise.onrender.com/api/items/delete/${itemId}`);
-            fetchItems();
+            // Optimistic update
+            setItems(prevItems => prevItems.filter(item => item._id !== itemId));
+            
+            await axios.delete(`${config.API_URL}/api/items/delete/${itemId}`);
         } catch (error) {
             console.error('Error deleting item:', error);
+            // Rollback on error
+            fetchItems();
         }
     };
 
@@ -153,17 +153,22 @@ const Inventory = () => {
     // Handle edit form submit
     const handleEditFormSubmit = async (event) => {
         event.preventDefault();
-
-        const editedItem = {
-            ...editFormData,
-        };
+        const editedItem = { ...editFormData };
 
         try {
-            await axios.put(`https://innovasion-enterprise.onrender.com/api/items/update/${editItemId}`, editedItem);
-            fetchItems();
+            // Optimistic update
+            setItems(prevItems => 
+                prevItems.map(item => 
+                    item._id === editItemId ? { ...item, ...editedItem } : item
+                )
+            );
+            
+            await axios.put(`${config.API_URL}/api/items/update/${editItemId}`, editedItem);
             setEditItemId(null);
         } catch (error) {
             console.error('Error updating item:', error);
+            // Rollback on error
+            fetchItems();
         }
     };
 
