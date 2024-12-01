@@ -1,13 +1,14 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 class ErrorBoundary extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { hasError: false };
+        this.state = { hasError: false, error: null };
     }
 
     static getDerivedStateFromError(error) {
-        return { hasError: true };
+        return { hasError: true, error };
     }
 
     componentDidCatch(error, errorInfo) {
@@ -30,10 +31,11 @@ class ErrorBoundary extends React.Component {
                             color: 'white',
                             border: 'none',
                             borderRadius: '5px',
-                            cursor: 'pointer'
+                            cursor: 'pointer',
+                            marginTop: '10px'
                         }}
                     >
-                        Reload Page
+                        Try Again
                     </button>
                 </div>
             );

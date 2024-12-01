@@ -20,27 +20,23 @@ function App() {
             document.body.classList.add('dark-mode');
         }
     }, []);
+
     return (
         <Router>
-            <Routes>
-                <Route path="/" element={<Login />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route 
-                    path="/inventory" 
-                    element={
-                        <ErrorBoundary>
-                            <Inventory />
-                        </ErrorBoundary>
-                    } 
-                />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/categories" element={<Categories />} />
-                <Route path="/orders/view" element={<ViewOrders />} />
-                <Route path="/orders/pending" element={<PendingOrders />} />
-                <Route path="/reports/sales" element={<SalesReports />} />
-                <Route path="/reports/inventory" element={<InventoryReports />} />
-                <Route path="/forgot-password" element={<ForgotPassword />} />
-            </Routes>
+            <ErrorBoundary>
+                <Routes>
+                    <Route path="/" element={<Login />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/inventory" element={<Inventory />} />
+                    <Route path="/settings" element={<Settings />} />
+                    <Route path="/categories" element={<Categories />} />
+                    <Route path="/orders/view" element={<ViewOrders />} />
+                    <Route path="/orders/pending" element={<PendingOrders />} />
+                    <Route path="/reports/sales" element={<SalesReports />} />
+                    <Route path="/reports/inventory" element={<InventoryReports />} />
+                    <Route path="/forgot-password" element={<ForgotPassword />} />
+                </Routes>
+            </ErrorBoundary>
         </Router>
     );
 }
